@@ -42,7 +42,7 @@ const isPathDirectory =(path:string | string[] | undefined)=>{
 export default function Folders() {
   const { query } = useRouter()
   let { path } = query
-  let pathStr = typeof(path) ==="string"?path:path[path.length-1]
+  let pathStr = typeof(path) !=="object"?path:path[path.length-1]
   let isOptionBtnShow = isPathDirectory(pathStr)?true:false
 
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
