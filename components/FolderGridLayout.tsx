@@ -163,8 +163,8 @@ const FolderGridLayout = ({
 
             <div
               className={`${
-                selected[c.id] ? 'opacity-100' : 'opacity-0'
-              } absolute top-0 left-0 z-10 m-1 rounded bg-white/50 py-0.5 group-hover:opacity-100 dark:bg-gray-900/50`}
+                selected[c.id] ? 'md:opacity-100' : 'md:opacity-0'
+              } absolute top-0 left-0 z-10 m-1 rounded md:bg-white/50 py-0.5 group-hover:opacity-100 dark:bg-gray-900/50`}
             >
               {!c.folder && !(c.name === '.password') && (
                 <Checkbox
