@@ -55,7 +55,7 @@ const FolderListLayout = ({
   return (
     <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="grid grid-cols-12 items-center space-x-2 border-b border-gray-900/10 px-3 dark:border-gray-500/30">
-        <div className="col-span-12 py-2 text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:col-span-6">
+        <div className="col-span-10 py-2 text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:col-span-6">
           {t('Name')}
         </div>
         <div className="col-span-3 hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
@@ -67,8 +67,8 @@ const FolderListLayout = ({
         <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
           {t('Actions')}
         </div>
-        <div className="hidden text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 md:block">
-          <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
+        <div className="text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-300 block col-span-2">
+          <div className="p-1.5 text-gray-700 dark:text-gray-400 flex">
             <Checkbox
               checked={totalSelected}
               onChange={toggleTotalSelected}

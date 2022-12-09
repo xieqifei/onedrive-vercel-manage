@@ -48,6 +48,30 @@ export default function Folders() {
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
   const [uploadedFiles, setUploadedFiles] = useState(new Array)
   const [ slideOpen, setSlideOpen ] = useState(false)
+  const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
+
+  const optionGroupProps = {
+    isShow:true,
+    setUploadingFiles,
+    uploadingFiles,
+    setSlideOpen,
+    setTotalUploadFileNumber
+  }
+
+  const progressSlideProps = {
+    uploadingFiles,
+    slideOpen,
+    setSlideOpen,
+    totalUploadFileNumber,
+    setTotalUploadFileNumber
+  }
+
+  const progressBtnProps = {
+    uploadingFiles,
+    slideOpen,
+    setSlideOpen,
+    totalUploadFileNumber
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
@@ -58,13 +82,13 @@ export default function Folders() {
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <Navbar />
         
-        <ProgressSlide files={uploadingFiles} slideOpen={slideOpen} setSlideOpen={setSlideOpen} />
+        <ProgressSlide {...progressSlideProps} />
         <div className="mx-auto w-full max-w-5xl p-4">
           <nav className="mb-4 flex items-center justify-between space-x-3 pl-1">
             <Breadcrumb query={query} />
             <div className='flex'>
-            <OptionGroup isShow={isOptionBtnShow} setUploadingFiles={setUploadingFiles} uploadingFiles={uploadingFiles} setSlideOpen={setSlideOpen}/>
-            <ProgressBtn uploadingFiles={uploadingFiles} slideOpen={slideOpen} setSlideOpen={setSlideOpen}/>
+            <OptionGroup {...optionGroupProps}/>
+            <ProgressBtn {...progressBtnProps}/>
             
             <SwitchLayout />
             </div>

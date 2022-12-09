@@ -14,12 +14,14 @@ const UploadDialog = ({
     uploadingFiles,
     setUploadingFiles,
     setSlideOpen,
+    setTotalUploadFileNumber
 }: {
     menuOpen: boolean
     setMenuOpen: Dispatch<SetStateAction<boolean>>
     uploadingFiles: Array<UploadingFile>
     setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
     setSlideOpen:Dispatch<SetStateAction<boolean>>
+    setTotalUploadFileNumber:Dispatch<SetStateAction<number>>
 }) => {
     const cancelButtonRef = useRef(null)
     const closeMenu = () => setMenuOpen(false)
@@ -30,7 +32,8 @@ const UploadDialog = ({
     const limtReq = new LimitPromise(6);
     //upload file to onedrive
     const handleUploadFiles = (files) => {
-        
+        let totFileNum:number = uploadingFiles.length+files.length
+        setTotalUploadFileNumber(totFileNum)
         let readyFiles = new Array<UploadingFile>
         files.map((file)=>{
             readyFiles.push({

@@ -21,19 +21,28 @@ const ListItem = ({ file, index }: { file: UploadingFile, index: number }) => {
   )
 }
 
+
 export default function ProgressSlide(
   {
-    files,
+    uploadingFiles,
     slideOpen,
     setSlideOpen,
+    totalUploadFileNumber,
+    setTotalUploadFileNumber
   }: {
-    files: Array<UploadingFile>
+    uploadingFiles: Array<UploadingFile>
     slideOpen: boolean
     setSlideOpen: Dispatch<SetStateAction<boolean>>
+    totalUploadFileNumber:number,
+    setTotalUploadFileNumber:Dispatch<SetStateAction<number>>
   }
 ) {
-
-
+  let percent:number = 0
+  if(totalUploadFileNumber !==0){
+    let doneNumber:number = totalUploadFileNumber - uploadingFiles.length
+    percent = doneNumber/totalUploadFileNumber*100
+  }
+  
   return (
     <Transition.Root show={slideOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setSlideOpen}>
@@ -87,18 +96,18 @@ export default function ProgressSlide(
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       {/* Replace with your content */}
-                      <div className={files.length === 0 ? 'hidden ' : ''}>
-                        <span>Uploading: {files.length} file(s)</span>
-                        <div className="mt-2 ml-10 sm:ml-80 h-1 relative w-60 rounded-full overflow-hidden">
+                      <div className={uploadingFiles.length === 0 ? 'hidden ' : ''}>
+                        <span>Uploading: {uploadingFiles.length} file(s)</span>
+                        <div className="mt-2 mr-2  h-1 relative w-full rounded-full overflow-hidden">
                           <div className=" w-full h-full bg-gray-200 absolute "></div>
-                          <div className=" h-full bg-yellow-400 sm:bg-green-500 absolute" style={{ width: '80%' }}></div>
+                          <div className=" h-full bg-green-400 absolute" style={{ width: percent+'%' }}></div>
                         </div>
 
                         {/* uploading file list */}
                         <div className={"flow-root"}>
                           <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
                             {
-                              files.map((file, index) => {
+                              uploadingFiles.map((file, index) => {
                                 return (
                                   <ListItem file={file} index={index} />
                                 )
@@ -109,7 +118,7 @@ export default function ProgressSlide(
                         </div>
 
                       </div>
-                      <div className={files.length > 0 ? 'hidden' : ''}>
+                      <div className={uploadingFiles.length > 0 ? 'hidden' : ''}>
                         Completed!!
                       </div>
                       {/* /End replace */}
