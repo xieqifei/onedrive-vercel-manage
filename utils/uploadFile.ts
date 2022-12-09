@@ -21,7 +21,7 @@ const getUploadSession = async (filename: string, parentPath: string, odpt: stri
 //defaut pieceSize is almost 3,3 MB
 //args: file:File object; pieceSize:Byte
 //return chunks,[{'start':start,'end':end,'blob':blob}]
-const sliceFile = (file, pieceSize = 5 * 256 * 256 * 10) => {
+const sliceFile = (file, pieceSize = 5 * 256 * 256 * 30) => {
   let totalSize = file.size; //total size of file
   let start = 0; // start byte
   let end = start + pieceSize; // end byte

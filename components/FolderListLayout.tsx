@@ -93,14 +93,15 @@ const FolderListLayout = ({
 
       {folderChildren.map((c: OdFolderChildren) => (
         <div
-          className="grid grid-cols-12 transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850"
+          className="grid grid-cols-12 transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850 flex"
           key={c.id}
         >
-          <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref>
-            <a className="col-span-12 md:col-span-10">
+          <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref >
+            <a className="col-span-10 md:col-span-10">
               <FileListItem fileContent={c} />
             </a>
           </Link>
+            
 
           {c.folder ? (
             <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
@@ -152,7 +153,7 @@ const FolderListLayout = ({
               </a>
             </div>
           )}
-          <div className="hidden p-1.5 text-gray-700 dark:text-gray-400 md:flex">
+          <div className=" p-1.5 text-gray-700 dark:text-gray-400 md:flex">
             {!c.folder && !(c.name === '.password') && (
               <Checkbox
                 checked={selected[c.id] ? 2 : 0}
