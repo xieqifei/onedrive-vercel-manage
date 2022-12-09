@@ -110,7 +110,7 @@ export default function ProgressSlide(
 
                       </div>
                       <div className={files.length > 0 ? 'hidden' : ''}>
-                        Completed!
+                        Completed!!
                       </div>
                       {/* /End replace */}
                     </div>
