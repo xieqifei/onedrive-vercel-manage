@@ -10,7 +10,7 @@ import SwitchLayout from '../components/SwitchLayout'
 import OptionGroup from '../components/OptionGroup'
 import { extensions } from '../utils/getPreviewType'
 import { useState } from 'react'
-import { UploadingFile } from '../types'
+import { OdFolderChildren, UploadingFile } from '../types'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 
@@ -47,8 +47,10 @@ export default function Folders() {
 
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
   const [uploadedFiles, setUploadedFiles] = useState(new Array)
-  const [ slideOpen, setSlideOpen ] = useState(false)
+  const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
+  const [odFolderChildren, setOdFolderChildren] = useState(new Array<OdFolderChildren>)
+
 
   const optionGroupProps = {
     isShow:true,
@@ -73,6 +75,12 @@ export default function Folders() {
     totalUploadFileNumber
   }
 
+  const fileListProps = {
+  
+    odFolderChildren,
+    setOdFolderChildren,
+    query
+  }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>o
@@ -93,7 +101,7 @@ export default function Folders() {
             <SwitchLayout />
             </div>
           </nav>
-          <FileListing query={query} />
+          <FileListing {...fileListProps} />
         </div>
       </main>
       <Footer />

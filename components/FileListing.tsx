@@ -1,6 +1,6 @@
 import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
 import { ParsedUrlQuery } from 'querystring'
-import { FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import emojiRegex from 'emoji-regex'
@@ -146,285 +146,290 @@ export const Downloading: FC<{ title: string; style: string }> = ({ title, style
   )
 }
 
-const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
-  const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
-  const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
-  const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
-  const [folderGenerating, setFolderGenerating] = useState<{
-    [key: string]: boolean
-  }>({})
+const FileListing: FC<{
+  odFolderChildren: Array<OdFolderChildren>,
+  setOdFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
+  query?: ParsedUrlQuery
+}> = ({
+  odFolderChildren,
+  setOdFolderChildren,
+  query }) => {
+    const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
+    const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
+    const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
+    const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})
 
-  const router = useRouter()
-  const hashedToken = getStoredToken(router.asPath)
-  const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
+    const router = useRouter()
+    const hashedToken = getStoredToken(router.asPath)
+    const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
 
-  const { t } = useTranslation()
+    const { t } = useTranslation()
 
-  const path = queryToPath(query)
+    const path = queryToPath(query)
 
-  const { data, error, size, setSize } = useProtectedSWRInfinite(path)
+    const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
-  if (error) {
-    // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
-    if (error.status === 403) {
-      router.push('/onedrive-vercel-index-oauth/step-1')
-      return <div />
-    }
-
-    return (
-      <PreviewContainer>
-        {error.status === 401 ? <Auth redirect={path} /> : <FourOhFour errorMsg={JSON.stringify(error.message)} />}
-      </PreviewContainer>
-    )
-  }
-  if (!data) {
-    return (
-      <PreviewContainer>
-        <Loading loadingText={t('Loading ...')} />
-      </PreviewContainer>
-    )
-  }
-
-  const responses: any[] = data ? [].concat(...data) : []
-
-  const isLoadingInitialData = !data && !error
-  const isLoadingMore = isLoadingInitialData || (size > 0 && data && typeof data[size - 1] === 'undefined')
-  const isEmpty = data?.[0]?.length === 0
-  const isReachingEnd = isEmpty || (data && typeof data[data.length - 1]?.next === 'undefined')
-  const onlyOnePage = data && typeof data[0].next === 'undefined'
-
-  if ('folder' in responses[0]) {
-    // Expand list of API returns into flattened file data
-    const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
-
-    // Find README.md file to render
-    const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')
-
-    // Filtered file list helper
-    const getFiles = () => folderChildren.filter(c => !c.folder && c.name !== '.password')
-
-    // File selection
-    const genTotalSelected = (selected: { [key: string]: boolean }) => {
-      const selectInfo = getFiles().map(c => Boolean(selected[c.id]))
-      const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
-      return hasT && hasF ? 1 : !hasF ? 2 : 0
-    }
-
-    const toggleItemSelected = (id: string) => {
-      let val: SetStateAction<{ [key: string]: boolean }>
-      if (selected[id]) {
-        val = { ...selected }
-        delete val[id]
-      } else {
-        val = { ...selected, [id]: true }
+    if (error) {
+      // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
+      if (error.status === 403) {
+        router.push('/onedrive-vercel-index-oauth/step-1')
+        return <div />
       }
-      setSelected(val)
-      setTotalSelected(genTotalSelected(val))
+
+      return (
+        <PreviewContainer>
+          {error.status === 401 ? <Auth redirect={path} /> : <FourOhFour errorMsg={JSON.stringify(error.message)} />}
+        </PreviewContainer>
+      )
+    }
+    if (!data) {
+      return (
+        <PreviewContainer>
+          <Loading loadingText={t('Loading ...')} />
+        </PreviewContainer>
+      )
     }
 
-    const toggleTotalSelected = () => {
-      if (genTotalSelected(selected) == 2) {
-        setSelected({})
-        setTotalSelected(0)
-      } else {
-        setSelected(Object.fromEntries(getFiles().map(c => [c.id, true])))
-        setTotalSelected(2)
+    const responses: any[] = data ? [].concat(...data) : []
+
+    const isLoadingInitialData = !data && !error
+    const isLoadingMore = isLoadingInitialData || (size > 0 && data && typeof data[size - 1] === 'undefined')
+    const isEmpty = data?.[0]?.length === 0
+    const isReachingEnd = isEmpty || (data && typeof data[data.length - 1]?.next === 'undefined')
+    const onlyOnePage = data && typeof data[0].next === 'undefined'
+
+    if ('folder' in responses[0]) {
+      // Expand list of API returns into flattened file data
+      const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
+      setOdFolderChildren(folderChildren)
+      
+      // Find README.md file to render
+      const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')
+
+      // Filtered file list helper
+      const getFiles = () => folderChildren.filter(c => !c.folder && c.name !== '.password')
+
+      // File selection
+      const genTotalSelected = (selected: { [key: string]: boolean }) => {
+        const selectInfo = getFiles().map(c => Boolean(selected[c.id]))
+        const [hasT, hasF] = [selectInfo.some(i => i), selectInfo.some(i => !i)]
+        return hasT && hasF ? 1 : !hasF ? 2 : 0
       }
-    }
 
-    // Selected file download
-    const handleSelectedDownload = () => {
-      const folderName = path.substring(path.lastIndexOf('/') + 1)
-      const folder = folderName ? decodeURIComponent(folderName) : undefined
-      const files = getFiles()
-        .filter(c => selected[c.id])
-        .map(c => ({
-          name: c.name,
-          url: `/api/raw/?path=${path}/${encodeURIComponent(c.name)}${hashedToken ? `&odpt=${hashedToken}` : ''}`,
-        }))
+      const toggleItemSelected = (id: string) => {
+        let val: SetStateAction<{ [key: string]: boolean }>
+        if (selected[id]) {
+          val = { ...selected }
+          delete val[id]
+        } else {
+          val = { ...selected, [id]: true }
+        }
+        setSelected(val)
+        setTotalSelected(genTotalSelected(val))
+      }
 
-      if (files.length == 1) {
-        const el = document.createElement('a')
-        el.style.display = 'none'
-        document.body.appendChild(el)
-        el.href = files[0].url
-        el.click()
-        el.remove()
-      } else if (files.length > 1) {
-        setTotalGenerating(true)
+      const toggleTotalSelected = () => {
+        if (genTotalSelected(selected) == 2) {
+          setSelected({})
+          setTotalSelected(0)
+        } else {
+          setSelected(Object.fromEntries(getFiles().map(c => [c.id, true])))
+          setTotalSelected(2)
+        }
+      }
 
-        const toastId = toast.loading(<DownloadingToast router={router} />)
-        downloadMultipleFiles({ toastId, router, files, folder })
-          .then(() => {
-            setTotalGenerating(false)
-            toast.success(t('Finished downloading selected files.'), {
-              id: toastId,
+      // Selected file download
+      const handleSelectedDownload = () => {
+        const folderName = path.substring(path.lastIndexOf('/') + 1)
+        const folder = folderName ? decodeURIComponent(folderName) : undefined
+        const files = getFiles()
+          .filter(c => selected[c.id])
+          .map(c => ({
+            name: c.name,
+            url: `/api/raw/?path=${path}/${encodeURIComponent(c.name)}${hashedToken ? `&odpt=${hashedToken}` : ''}`,
+          }))
+
+        if (files.length == 1) {
+          const el = document.createElement('a')
+          el.style.display = 'none'
+          document.body.appendChild(el)
+          el.href = files[0].url
+          el.click()
+          el.remove()
+        } else if (files.length > 1) {
+          setTotalGenerating(true)
+
+          const toastId = toast.loading(<DownloadingToast router={router} />)
+          downloadMultipleFiles({ toastId, router, files, folder })
+            .then(() => {
+              setTotalGenerating(false)
+              toast.success(t('Finished downloading selected files.'), {
+                id: toastId,
+              })
             })
+            .catch(() => {
+              setTotalGenerating(false)
+              toast.error(t('Failed to download selected files.'), { id: toastId })
+            })
+        }
+      }
+
+      // Folder recursive download
+      const handleFolderDownload = (path: string, id: string, name?: string) => () => {
+        const files = (async function* () {
+          for await (const { meta: c, path: p, isFolder, error } of traverseFolder(path)) {
+            if (error) {
+              toast.error(
+                t('Failed to download folder {{path}}: {{status}} {{message}} Skipped it to continue.', {
+                  path: p,
+                  status: error.status,
+                  message: error.message,
+                })
+              )
+              continue
+            }
+            const hashedTokenForPath = getStoredToken(p)
+            yield {
+              name: c?.name,
+              url: `/api/raw/?path=${p}${hashedTokenForPath ? `&odpt=${hashedTokenForPath}` : ''}`,
+              path: p,
+              isFolder,
+            }
+          }
+        })()
+
+        setFolderGenerating({ ...folderGenerating, [id]: true })
+        const toastId = toast.loading(<DownloadingToast router={router} />)
+
+        downloadTreelikeMultipleFiles({
+          toastId,
+          router,
+          files,
+          basePath: path,
+          folder: name,
+        })
+          .then(() => {
+            setFolderGenerating({ ...folderGenerating, [id]: false })
+            toast.success(t('Finished downloading folder.'), { id: toastId })
           })
           .catch(() => {
-            setTotalGenerating(false)
-            toast.error(t('Failed to download selected files.'), { id: toastId })
+            setFolderGenerating({ ...folderGenerating, [id]: false })
+            toast.error(t('Failed to download folder.'), { id: toastId })
           })
       }
+
+      // Folder layout component props
+      const folderProps = {
+        toast,
+        path,
+        odFolderChildren,
+        selected,
+        toggleItemSelected,
+        totalSelected,
+        toggleTotalSelected,
+        totalGenerating,
+        handleSelectedDownload,
+        folderGenerating,
+        handleFolderDownload,
+      }
+
+      return (
+        <>
+          <Toaster />
+
+          {layout.name === 'Grid' ? <FolderGridLayout {...folderProps} /> : <FolderListLayout {...folderProps} />}
+
+          {!onlyOnePage && (
+            <div className="rounded-b bg-white dark:bg-gray-900 dark:text-gray-100">
+              <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
+                {t('- showing {{count}} page(s) ', {
+                  count: size,
+                  totalFileNum: isLoadingMore ? '...' : folderChildren.length,
+                }) +
+                  (isLoadingMore
+                    ? t('of {{count}} file(s) -', { count: folderChildren.length, context: 'loading' })
+                    : t('of {{count}} file(s) -', { count: folderChildren.length, context: 'loaded' }))}
+              </div>
+              <button
+                className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
+                  }`}
+                onClick={() => setSize(size + 1)}
+                disabled={isLoadingMore || isReachingEnd}
+              >
+                {isLoadingMore ? (
+                  <>
+                    <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
+                    <span>{t('Loading ...')}</span>{' '}
+                  </>
+                ) : isReachingEnd ? (
+                  <span>{t('No more files')}</span>
+                ) : (
+                  <>
+                    <span>{t('Load more')}</span>
+                    <FontAwesomeIcon icon="chevron-circle-down" />
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+
+          {readmeFile && (
+            <div className="mt-4">
+              <MarkdownPreview file={readmeFile} path={path} standalone={false} proxy={true} />
+            </div>
+          )}
+        </>
+      )
     }
 
-    // Folder recursive download
-    const handleFolderDownload = (path: string, id: string, name?: string) => () => {
-      const files = (async function* () {
-        for await (const { meta: c, path: p, isFolder, error } of traverseFolder(path)) {
-          if (error) {
-            toast.error(
-              t('Failed to download folder {{path}}: {{status}} {{message}} Skipped it to continue.', {
-                path: p,
-                status: error.status,
-                message: error.message,
-              })
-            )
-            continue
-          }
-          const hashedTokenForPath = getStoredToken(p)
-          yield {
-            name: c?.name,
-            url: `/api/raw/?path=${p}${hashedTokenForPath ? `&odpt=${hashedTokenForPath}` : ''}`,
-            path: p,
-            isFolder,
-          }
+    if ('file' in responses[0] && responses.length === 1) {
+      const file = responses[0].file as OdFileObject
+      const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video) })
+
+      if (previewType) {
+        switch (previewType) {
+          case preview.image:
+            return <ImagePreview file={file} />
+
+          case preview.text:
+            return <TextPreview file={file} />
+
+          case preview.code:
+            return <CodePreview file={file} />
+
+          case preview.markdown:
+            return <MarkdownPreview file={file} path={path} />
+
+          case preview.video:
+            return <VideoPreview file={file} />
+
+          case preview.audio:
+            return <AudioPreview file={file} />
+
+          case preview.pdf:
+            return <PDFPreview file={file} />
+
+          case preview.office:
+            return <OfficePreview file={file} />
+
+          case preview.epub:
+            return <EPUBPreview file={file} />
+
+          case preview.url:
+            return <URLPreview file={file} />
+
+          default:
+            return <DefaultPreview file={file} />
         }
-      })()
-
-      setFolderGenerating({ ...folderGenerating, [id]: true })
-      const toastId = toast.loading(<DownloadingToast router={router} />)
-
-      downloadTreelikeMultipleFiles({
-        toastId,
-        router,
-        files,
-        basePath: path,
-        folder: name,
-      })
-        .then(() => {
-          setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.success(t('Finished downloading folder.'), { id: toastId })
-        })
-        .catch(() => {
-          setFolderGenerating({ ...folderGenerating, [id]: false })
-          toast.error(t('Failed to download folder.'), { id: toastId })
-        })
-    }
-
-    // Folder layout component props
-    const folderProps = {
-      toast,
-      path,
-      folderChildren,
-      selected,
-      toggleItemSelected,
-      totalSelected,
-      toggleTotalSelected,
-      totalGenerating,
-      handleSelectedDownload,
-      folderGenerating,
-      handleFolderDownload,
+      } else {
+        return <DefaultPreview file={file} />
+      }
     }
 
     return (
-      <>
-        <Toaster />
-
-        {layout.name === 'Grid' ? <FolderGridLayout {...folderProps} /> : <FolderListLayout {...folderProps} />}
-
-        {!onlyOnePage && (
-          <div className="rounded-b bg-white dark:bg-gray-900 dark:text-gray-100">
-            <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
-              {t('- showing {{count}} page(s) ', {
-                count: size,
-                totalFileNum: isLoadingMore ? '...' : folderChildren.length,
-              }) +
-                (isLoadingMore
-                  ? t('of {{count}} file(s) -', { count: folderChildren.length, context: 'loading' })
-                  : t('of {{count}} file(s) -', { count: folderChildren.length, context: 'loaded' }))}
-            </div>
-            <button
-              className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${
-                isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
-              }`}
-              onClick={() => setSize(size + 1)}
-              disabled={isLoadingMore || isReachingEnd}
-            >
-              {isLoadingMore ? (
-                <>
-                  <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
-                  <span>{t('Loading ...')}</span>{' '}
-                </>
-              ) : isReachingEnd ? (
-                <span>{t('No more files')}</span>
-              ) : (
-                <>
-                  <span>{t('Load more')}</span>
-                  <FontAwesomeIcon icon="chevron-circle-down" />
-                </>
-              )}
-            </button>
-          </div>
-        )}
-
-        {readmeFile && (
-          <div className="mt-4">
-            <MarkdownPreview file={readmeFile} path={path} standalone={false} proxy={true} />
-          </div>
-        )}
-      </>
+      <PreviewContainer>
+        <FourOhFour errorMsg={t('Cannot preview {{path}}', { path })} />
+      </PreviewContainer>
     )
   }
-
-  if ('file' in responses[0] && responses.length === 1) {
-    const file = responses[0].file as OdFileObject
-    const previewType = getPreviewType(getExtension(file.name), { video: Boolean(file.video) })
-
-    if (previewType) {
-      switch (previewType) {
-        case preview.image:
-          return <ImagePreview file={file} />
-
-        case preview.text:
-          return <TextPreview file={file} />
-
-        case preview.code:
-          return <CodePreview file={file} />
-
-        case preview.markdown:
-          return <MarkdownPreview file={file} path={path} />
-
-        case preview.video:
-          return <VideoPreview file={file} />
-
-        case preview.audio:
-          return <AudioPreview file={file} />
-
-        case preview.pdf:
-          return <PDFPreview file={file} />
-
-        case preview.office:
-          return <OfficePreview file={file} />
-
-        case preview.epub:
-          return <EPUBPreview file={file} />
-
-        case preview.url:
-          return <URLPreview file={file} />
-
-        default:
-          return <DefaultPreview file={file} />
-      }
-    } else {
-      return <DefaultPreview file={file} />
-    }
-  }
-
-  return (
-    <PreviewContainer>
-      <FourOhFour errorMsg={t('Cannot preview {{path}}', { path })} />
-    </PreviewContainer>
-  )
-}
 export default FileListing

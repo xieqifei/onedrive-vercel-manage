@@ -33,7 +33,7 @@ const FileListItem: FC<{ fileContent: OdFolderChildren }> = ({ fileContent: c })
 
 const FolderListLayout = ({
   path,
-  folderChildren,
+  odFolderChildren,
   selected,
   toggleItemSelected,
   totalSelected,
@@ -91,7 +91,7 @@ const FolderListLayout = ({
         </div>
       </div>
 
-      {folderChildren.map((c: OdFolderChildren) => (
+      {odFolderChildren.map((c: OdFolderChildren) => (
         <div
           className="grid grid-cols-12 transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850 flex"
           key={c.id}

@@ -56,7 +56,7 @@ const GridItem = ({ c, path }: { c: OdFolderChildren; path: string }) => {
 
 const FolderGridLayout = ({
   path,
-  folderChildren,
+  odFolderChildren,
   selected,
   toggleItemSelected,
   totalSelected,
@@ -78,7 +78,7 @@ const FolderGridLayout = ({
   return (
     <div className="rounded bg-white dark:bg-gray-900 dark:text-gray-100">
       <div className="flex items-center border-b border-gray-900/10 px-3 text-xs font-bold uppercase tracking-widest text-gray-600 dark:border-gray-500/30 dark:text-gray-400">
-        <div className="flex-1">{t('{{count}} item(s)', { count: folderChildren.length })}</div>
+        <div className="flex-1">{t('{{count}} item(s)', { count: odFolderChildren.length })}</div>
         <div className="flex p-1.5 text-gray-700 dark:text-gray-400">
           <Checkbox
             checked={totalSelected}
@@ -102,7 +102,7 @@ const FolderGridLayout = ({
       </div>
 
       <div className="grid grid-cols-2 gap-3 p-3 md:grid-cols-4">
-        {folderChildren.map((c: OdFolderChildren) => (
+        {odFolderChildren.map((c: OdFolderChildren) => (
           <div
             key={c.id}
             className="group relative overflow-hidden rounded transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850"

@@ -8,16 +8,16 @@ import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
 import { useState } from 'react'
-import { UploadingFile } from '../types'
+import { UploadingFile ,OdFolderChildren} from '../types'
 import OptionGroup from '../components/OptionGroup'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 
 export default function Home() {
-
+  
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
-  const [uploadedFiles, setUploadedFiles] = useState(new Array)
-  const [ slideOpen, setSlideOpen ] = useState(false)
+  const [odFolderChildren, setOdFolderChildren] = useState(new Array<OdFolderChildren>)
+  const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
 
   const optionGroupProps = {
@@ -42,6 +42,11 @@ export default function Home() {
     totalUploadFileNumber
   }
 
+  const fileListProps = {
+    odFolderChildren,
+    setOdFolderChildren
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>
@@ -62,7 +67,7 @@ export default function Home() {
             <SwitchLayout />
             </div>
           </nav>
-          <FileListing />
+          <FileListing {...fileListProps}/>
         </div>
       </main>
 
