@@ -18,18 +18,23 @@ const isPathDirectory =(path:string | string[] | undefined)=>{
   if(typeof (path) === "string" ){
     let pathPart = path.split('.')
     if(pathPart.length===1){
+
       return true
     }else{
+      let isNotFile = true
       Object.keys(extensions).map(
         (key,index)=>{
           if(pathPart[pathPart.length-1] === key){
-            return false
+            isNotFile = false
           }
         }
       )
-      return true
+
+      return isNotFile
     }
   }else{
+    console.log(path)
+
     return false
   }
 }
@@ -37,7 +42,9 @@ const isPathDirectory =(path:string | string[] | undefined)=>{
 export default function Folders() {
   const { query } = useRouter()
   let { path } = query
-  let isOptionBtnShow = isPathDirectory(path)?true:false
+  let pathStr = typeof(path) ==="string"?path:path[path.length-1]
+  let isOptionBtnShow = isPathDirectory(pathStr)?true:false
+
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
   const [uploadedFiles, setUploadedFiles] = useState(new Array)
   const [ slideOpen, setSlideOpen ] = useState(false)
