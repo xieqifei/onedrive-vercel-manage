@@ -28,7 +28,7 @@
     "ioredis": "^5.2.3",
     "jszip": "^3.10.1",
     "mpegts.js": "^1.6.10",
-    "next": "^12.3.1",
+    "next": "^13.0.6",
     "next-i18next": "^12.1.0",
     "nextjs-progressbar": "^0.0.14",
     "plyr-react": "^5.1.0",
