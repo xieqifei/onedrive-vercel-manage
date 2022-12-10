@@ -8,13 +8,13 @@ const HomeCrumb = () => {
   const { t } = useTranslation()
 
   return (
-    <Link href="/">
-      <a className="flex items-center">
-        <FontAwesomeIcon className="h-3 w-3" icon={['far', 'flag']} />
-        <span className="ml-2 font-medium">{t('Home')}</span>
-      </a>
-    </Link>
-  )
+    (<Link href="/" className="flex items-center">
+
+      <FontAwesomeIcon className="h-3 w-3" icon={['far', 'flag']} />
+      <span className="ml-2 font-medium">{t('Home')}</span>
+
+    </Link>)
+  );
 }
 
 const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
@@ -37,14 +37,12 @@ const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
                     .map(p => encodeURIComponent(p))
                     .join('/')}`}
                   passHref
-                >
-                  <a
-                    className={`ml-1 transition-all duration-75 hover:opacity-70 md:ml-3 ${
-                      i == 0 && 'pointer-events-none opacity-80'
-                    }`}
-                  >
-                    {p}
-                  </a>
+                  className={`ml-1 transition-all duration-75 hover:opacity-70 md:ml-3 ${
+                    i == 0 && 'pointer-events-none opacity-80'
+                  }`}>
+
+                  {p}
+
                 </Link>
               </li>
             ))}
@@ -52,7 +50,7 @@ const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
             <HomeCrumb />
           </li>
         </ol>
-      )
+      );
     }
   }
 

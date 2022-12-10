@@ -96,10 +96,13 @@ const FolderListLayout = ({
           className="grid grid-cols-12 transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850 flex"
           key={c.id}
         >
-          <Link href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`} passHref >
-            <a className="col-span-10">
-              <FileListItem fileContent={c} />
-            </a>
+          <Link
+            href={`${path === '/' ? '' : path}/${encodeURIComponent(c.name)}`}
+            passHref
+            className="col-span-10">
+
+            <FileListItem fileContent={c} />
+
           </Link>
             
 
@@ -165,7 +168,7 @@ const FolderListLayout = ({
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 export default FolderListLayout

@@ -88,7 +88,7 @@ const MarkdownPreview: FC<{
         <SyntaxHighlighter language={match ? match[1] : 'language-text'} style={tomorrowNight} PreTag="div" {...props}>
           {String(children).replace(/\n$/, '')}
         </SyntaxHighlighter>
-      )
+      );
     },
   }
 

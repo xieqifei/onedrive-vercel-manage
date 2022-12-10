@@ -176,15 +176,15 @@ const FolderGridLayout = ({
             </div>
 
             <Link href={getItemPath(c.name)} passHref>
-              <a>
-                <GridItem c={c} path={getItemPath(c.name)} />
-              </a>
+
+              <GridItem c={c} path={getItemPath(c.name)} />
+
             </Link>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export default FolderGridLayout
