@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import LimitPromise from '../utils/LimitPromise'
 import { restrictedUpload } from '../utils/uploadFile'
-import { UploadingFile } from '../types'
+import { OdFolderChildren, UploadingFile } from '../types'
 import { formatBytes } from '../utils/formatBytes'
 
 
@@ -14,23 +14,30 @@ const UploadDialog = ({
     uploadingFiles,
     setUploadingFiles,
     setSlideOpen,
+    setTotalUploadFileNumber,
+    uploadedFiles,
+    setUploadedFiles,
+
 }: {
     menuOpen: boolean
     setMenuOpen: Dispatch<SetStateAction<boolean>>
     uploadingFiles: Array<UploadingFile>
     setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
     setSlideOpen:Dispatch<SetStateAction<boolean>>
+    setTotalUploadFileNumber:Dispatch<SetStateAction<number>>
+    uploadedFiles:Array<OdFolderChildren>
+    setUploadedFiles:Dispatch<SetStateAction<Array<OdFolderChildren>>>
 }) => {
     const cancelButtonRef = useRef(null)
     const closeMenu = () => setMenuOpen(false)
-    const [uploadedFiles, setUploadedFiles] = useState(new Array())
     const { asPath } = useRouter()
     const hashedToken = getStoredToken(asPath)
     //limit the maximal number of uploading files to 6
     const limtReq = new LimitPromise(6);
     //upload file to onedrive
     const handleUploadFiles = (files) => {
-        
+        let totFileNum:number = uploadingFiles.length+files.length
+        setTotalUploadFileNumber(totFileNum)
         let readyFiles = new Array<UploadingFile>
         files.map((file)=>{
             readyFiles.push({
@@ -45,7 +52,7 @@ const UploadDialog = ({
         const uploaded = [...uploadedFiles];
         files.map(async (file) => {
             restrictedUpload(file,asPath,hashedToken,limtReq,uploadingFiles,setUploadingFiles).then((data)=>{
-                uploaded.push(data)
+                uploaded.push(data as unknown as OdFolderChildren)
                 //remove uploaded files from uploading list
                 uploading.map((f, index) => {
                     if (f.name === file.name) {

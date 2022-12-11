@@ -10,7 +10,7 @@ import SwitchLayout from '../components/SwitchLayout'
 import OptionGroup from '../components/OptionGroup'
 import { extensions } from '../utils/getPreviewType'
 import { useState } from 'react'
-import { UploadingFile } from '../types'
+import { OdFolderChildren, UploadingFile } from '../types'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 
@@ -18,18 +18,23 @@ const isPathDirectory =(path:string | string[] | undefined)=>{
   if(typeof (path) === "string" ){
     let pathPart = path.split('.')
     if(pathPart.length===1){
+
       return true
     }else{
+      let isNotFile = true
       Object.keys(extensions).map(
         (key,index)=>{
           if(pathPart[pathPart.length-1] === key){
-            return false
+            isNotFile = false
           }
         }
       )
-      return true
+
+      return isNotFile
     }
   }else{
+    console.log(path)
+
     return false
   }
 }
@@ -37,11 +42,47 @@ const isPathDirectory =(path:string | string[] | undefined)=>{
 export default function Folders() {
   const { query } = useRouter()
   let { path } = query
-  let isOptionBtnShow = isPathDirectory(path)?true:false
+  let pathStr = typeof(path) !=="object"?path:path[path.length-1]
+  let isOptionBtnShow = isPathDirectory(pathStr)?true:false
+
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
   const [uploadedFiles, setUploadedFiles] = useState(new Array)
-  const [ slideOpen, setSlideOpen ] = useState(false)
+  const [slideOpen, setSlideOpen ] = useState(false)
+  const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
+  const [odFolderChildren, setOdFolderChildren] = useState(new Array<OdFolderChildren>)
 
+
+  const optionGroupProps = {
+    isShow:isOptionBtnShow,
+    uploadingFiles,
+    uploadedFiles,
+    setUploadedFiles,
+    setUploadingFiles,
+    setSlideOpen,
+    setTotalUploadFileNumber
+  }
+
+  const progressSlideProps = {
+    uploadingFiles,
+    slideOpen,
+    setSlideOpen,
+    totalUploadFileNumber,
+    setTotalUploadFileNumber
+  }
+
+  const progressBtnProps = {
+    uploadingFiles,
+    slideOpen,
+    setSlideOpen,
+    totalUploadFileNumber
+  }
+
+  const fileListProps = {
+  
+    uploadedFiles,
+    setUploadedFiles,
+    query
+  }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>o
@@ -51,18 +92,18 @@ export default function Folders() {
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <Navbar />
         
-        <ProgressSlide files={uploadingFiles} slideOpen={slideOpen} setSlideOpen={setSlideOpen} />
+        <ProgressSlide {...progressSlideProps} />
         <div className="mx-auto w-full max-w-5xl p-4">
           <nav className="mb-4 flex items-center justify-between space-x-3 pl-1">
             <Breadcrumb query={query} />
             <div className='flex'>
-            <OptionGroup isShow={isOptionBtnShow} setUploadingFiles={setUploadingFiles} uploadingFiles={uploadingFiles} setSlideOpen={setSlideOpen}/>
-            <ProgressBtn uploadingFiles={uploadingFiles} slideOpen={slideOpen} setSlideOpen={setSlideOpen}/>
+            <OptionGroup {...optionGroupProps}/>
+            <ProgressBtn {...progressBtnProps}/>
             
             <SwitchLayout />
             </div>
           </nav>
-          <FileListing query={query} />
+          <FileListing {...fileListProps} />
         </div>
       </main>
       <Footer />

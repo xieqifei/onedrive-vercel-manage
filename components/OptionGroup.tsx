@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu, Transition } from '@headlessui/react'
 import { Dispatch, Fragment, SetStateAction, useRef, useState } from 'react'
-import { UploadingFile } from '../types'
+import { OdFolderChildren, UploadingFile } from '../types'
 import UploadDialog from './UploadDialog'
 import { AiOutlineEllipsis } from "react-icons/ai";
 
@@ -13,19 +13,35 @@ function classNames(...classes) {
 const OptionGroup = ({
   isShow,
   uploadingFiles,
+  uploadedFiles,
+  setUploadedFiles,
   setUploadingFiles,
-  setSlideOpen
+  setSlideOpen,
+  setTotalUploadFileNumber
 }: {
   isShow: boolean
   uploadingFiles: Array<UploadingFile>
+  uploadedFiles:Array<OdFolderChildren>
+  setUploadedFiles:Dispatch<SetStateAction<Array<OdFolderChildren>>>
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
-  setSlideOpen:Dispatch<SetStateAction<boolean>>
+  setSlideOpen:Dispatch<SetStateAction<boolean>>,
+  setTotalUploadFileNumber:Dispatch<SetStateAction<number>>
 }) => {
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const uploadDialogProps = {
+    menuOpen,
+    setMenuOpen,
+    uploadingFiles,
+    setUploadingFiles,
+    setSlideOpen,
+    setTotalUploadFileNumber,
+    uploadedFiles,
+    setUploadedFiles,
+  }
   return (
     <div className={isShow ? "inline-block float-right mr-4" : "hidden "}>
-      <UploadDialog menuOpen={menuOpen} setMenuOpen={setMenuOpen} uploadingFiles={uploadingFiles} setUploadingFiles={setUploadingFiles} setSlideOpen={setSlideOpen}/>
+      <UploadDialog {...uploadDialogProps}/>
       <Menu as="div" className="relative inline-block text-left ">
         <div>
           <Menu.Button className="relative w-auto flex-shrink-0 text-sm text-gray-600 dark:text-gray-300">

@@ -72,7 +72,7 @@ export const uploadFile = async (
           let chunk = chunks[start / pieceSize]
           let reqConfig = {
             headers: {
-              'Content-Length': file.size,
+              // 'Content-Length': file.size,
               'Content-Range': `bytes ${chunk['start']}-${chunk['end']}/${file.size}`
             }
           }

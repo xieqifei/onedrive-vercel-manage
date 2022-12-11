@@ -8,38 +8,68 @@ import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
 import { useState } from 'react'
-import { UploadingFile } from '../types'
+import { UploadingFile ,OdFolderChildren} from '../types'
 import OptionGroup from '../components/OptionGroup'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 
 export default function Home() {
-
+  
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
-  const [uploadedFiles, setUploadedFiles] = useState(new Array)
-  const [ slideOpen, setSlideOpen ] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState(new Array<OdFolderChildren>)
+  const [slideOpen, setSlideOpen ] = useState(false)
+  const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
+
+  const optionGroupProps = {
+    isShow:true,
+    uploadingFiles,
+    uploadedFiles,
+    setUploadedFiles,
+    setUploadingFiles,
+    setSlideOpen,
+    setTotalUploadFileNumber
+  }
+  const progressSlideProps = {
+    uploadingFiles,
+    slideOpen,
+    setSlideOpen,
+    totalUploadFileNumber,
+    setTotalUploadFileNumber
+  }
+
+  const progressBtnProps = {
+    uploadingFiles,
+    slideOpen,
+    setSlideOpen,
+    totalUploadFileNumber
+  }
+
+  const fileListProps = {
+    uploadedFiles,
+    setUploadedFiles
+  }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900 overflow-y-scroll">
       <Head>
         <title>{siteConfig.title}</title>
       </Head>
 
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <Navbar />
-        <ProgressSlide files={uploadingFiles} slideOpen={slideOpen} setSlideOpen={setSlideOpen} />
+        <ProgressSlide {...progressSlideProps}/>
 
         <div className="mx-auto w-full max-w-5xl p-4">
           <nav className="mb-4 flex items-center justify-between pl-1">
             <Breadcrumb />
             <div className='flex'>
-            <OptionGroup isShow={true} setUploadingFiles={setUploadingFiles} uploadingFiles={uploadingFiles} setSlideOpen={setSlideOpen}/>
-            <ProgressBtn uploadingFiles={uploadingFiles} slideOpen={slideOpen} setSlideOpen={setSlideOpen}/>
+            <OptionGroup {...optionGroupProps}/>
+            <ProgressBtn {...progressBtnProps}/>
             
             <SwitchLayout />
             </div>
           </nav>
-          <FileListing />
+          <FileListing {...fileListProps}/>
         </div>
       </main>
 
