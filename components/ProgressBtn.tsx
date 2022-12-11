@@ -1,7 +1,6 @@
 
 import { Dispatch, SetStateAction } from "react"
 import { UploadingFile } from "../types"
-import {Circles } from 'react-loading-icons'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -26,6 +25,7 @@ export default function ProgressBtn(
   
   return (
     <div className={uploadingFiles.length===0?'hidden ':'inline-block '+'float-right mr-4'}>
+    {/* <div className={'inline-block '+'float-right mr-4'}> */}
       <button className={ "relative w-auto flex-shrink-0 text-sm text-gray-600 dark:text-gray-300 grid grid-cols-1 md:grid-cols-6"} onClick={() => { setSlideOpen(!slideOpen) }}>
       {/* <Circles className="col-span-1" height={'18'} width='18' speed='2' fill='#06bcee'/> */}
       <div style={{ width: 18, height: 18 }} className = 'col-span-1'>
