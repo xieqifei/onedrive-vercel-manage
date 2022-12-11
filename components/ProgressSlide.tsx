@@ -1,9 +1,9 @@
 import { Dispatch, Fragment, SetStateAction } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { UploadingFile } from '../types'
-const ListItem = ({ file, index }: { file: UploadingFile, index: number }) => {
+const ListItem = ({ file}: { file: UploadingFile }) => {
   return (
-    <li className="pt-3 pb-0 sm:pt-4" key={index}>
+    <li className="pt-3 pb-0 sm:pt-4" key={file.name}>
       <div className="flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
@@ -109,11 +109,10 @@ export default function ProgressSlide(
                             {
                               uploadingFiles.map((file, index) => {
                                 return (
-                                  <ListItem file={file} index={index} />
+                                  <ListItem file={file} />
                                 )
                               })
                             }
-
                           </ul>
                         </div>
 
