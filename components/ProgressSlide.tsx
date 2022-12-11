@@ -15,17 +15,17 @@ export default function ProgressSlide(
     uploadingFiles: Array<UploadingFile>
     slideOpen: boolean
     setSlideOpen: Dispatch<SetStateAction<boolean>>
-    totalUploadFileNumber:number,
-    setTotalUploadFileNumber:Dispatch<SetStateAction<number>>
+    totalUploadFileNumber: number,
+    setTotalUploadFileNumber: Dispatch<SetStateAction<number>>
   }
 ) {
-  let percent:number = 0
-  if(totalUploadFileNumber !==0){
-    let doneNumber:number = totalUploadFileNumber - uploadingFiles.length
-    percent = doneNumber/totalUploadFileNumber*100
+  let percent: number = 0
+  if (totalUploadFileNumber !== 0) {
+    let doneNumber: number = totalUploadFileNumber - uploadingFiles.length
+    percent = doneNumber / totalUploadFileNumber * 100
   }
 
-  const ListItems = uploadingFiles.map(( file: UploadingFile) => {
+  const ListItems = uploadingFiles.map((file: UploadingFile) => {
     return (
       <li className="pt-3 pb-0 sm:pt-4" key={file.name}>
         <div className="flex items-center space-x-4">
@@ -44,10 +44,10 @@ export default function ProgressSlide(
       </li>
     )
   })
-  
+
   return (
     <Transition.Root show={slideOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={setSlideOpen}>
+      <Dialog as="div" className="relative z-[999]" onClose={setSlideOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -85,24 +85,24 @@ export default function ProgressSlide(
                     <div className="absolute top-0 left-0 -ml-8 flex pt-4 pr-2 sm:-ml-10 sm:pr-4">
                       <button
                         type="button"
-                        className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                        // className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                         onClick={() => setSlideOpen(false)}
                       >
                         <span className="sr-only">Close panel</span>
                       </button>
                     </div>
                   </Transition.Child>
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                  <div className="flex h-full flex-col bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <Dialog.Title className="text-lg font-medium text-gray-900">File Process</Dialog.Title>
                     </div>
-                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                    <div className="relative mt-6 flex-1 px-4 sm:px-6 overflow-y-auto">
                       {/* Replace with your content */}
                       <div className={uploadingFiles.length === 0 ? 'hidden ' : ''}>
                         <span>Uploading: {uploadingFiles.length} file(s)</span>
-                        <div className="mt-2 mr-2  h-1 relative w-full rounded-full overflow-hidden">
+                        <div className="mt-2 mr-2  h-1 relative w-full rounded-full">
                           <div className=" w-full h-full bg-gray-200 absolute "></div>
-                          <div className=" h-full bg-green-400 absolute" style={{ width: percent+'%' }}></div>
+                          <div className=" h-full bg-green-400 absolute" style={{ width: percent + '%' }}></div>
                         </div>
 
                         {/* uploading file list */}
@@ -111,7 +111,6 @@ export default function ProgressSlide(
                             {ListItems}
                           </ul>
                         </div>
-
                       </div>
                       <div className={uploadingFiles.length > 0 ? 'hidden' : ''}>
                         Completed!!

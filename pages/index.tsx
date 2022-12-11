@@ -21,7 +21,7 @@ export default function Home() {
   const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
 
   const optionGroupProps = {
-    isShow:true,
+    isOptionBtnShow:true,
     uploadingFiles,
     uploadedFiles,
     setUploadedFiles,
@@ -50,17 +50,20 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900 overflow-y-scroll">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>
         <title>{siteConfig.title}</title>
       </Head>
-
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
-        <Navbar />
         <ProgressSlide {...progressSlideProps}/>
 
+        <Navbar />
+        
+
         <div className="mx-auto w-full max-w-5xl p-4">
+          
           <nav className="mb-4 flex items-center justify-between pl-1">
+          
             <Breadcrumb />
             <div className='flex'>
             <OptionGroup {...optionGroupProps}/>

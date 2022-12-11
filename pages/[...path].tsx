@@ -49,11 +49,9 @@ export default function Folders() {
   const [uploadedFiles, setUploadedFiles] = useState(new Array)
   const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
-  const [odFolderChildren, setOdFolderChildren] = useState(new Array<OdFolderChildren>)
-
-
+ 
   const optionGroupProps = {
-    isShow:isOptionBtnShow,
+    isOptionBtnShow,
     uploadingFiles,
     uploadedFiles,
     setUploadedFiles,
