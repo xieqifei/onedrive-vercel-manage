@@ -1,25 +1,7 @@
 import { Dispatch, Fragment, SetStateAction } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { UploadingFile } from '../types'
-const ListItem = ({ file}: { file: UploadingFile }) => {
-  return (
-    <li className="pt-3 pb-0 sm:pt-4" key={file.name}>
-      <div className="flex items-center space-x-4">
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-            {file.name}
-          </p>
-          <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-            file size: {file.sizeStr}
-          </p>
-        </div>
-        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-          {file.percent}%
-        </div>
-      </div>
-    </li>
-  )
-}
+
 
 
 export default function ProgressSlide(
@@ -42,6 +24,26 @@ export default function ProgressSlide(
     let doneNumber:number = totalUploadFileNumber - uploadingFiles.length
     percent = doneNumber/totalUploadFileNumber*100
   }
+
+  const ListItems = uploadingFiles.map(( file: UploadingFile) => {
+    return (
+      <li className="pt-3 pb-0 sm:pt-4" key={file.name}>
+        <div className="flex items-center space-x-4">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+              {file.name}
+            </p>
+            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+              file size: {file.sizeStr}
+            </p>
+          </div>
+          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+            {file.percent}%
+          </div>
+        </div>
+      </li>
+    )
+  })
   
   return (
     <Transition.Root show={slideOpen} as={Fragment}>
@@ -106,13 +108,7 @@ export default function ProgressSlide(
                         {/* uploading file list */}
                         <div className={"flow-root"}>
                           <ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-                            {
-                              uploadingFiles.map((file, index) => {
-                                return (
-                                  <ListItem file={file} />
-                                )
-                              })
-                            }
+                            {ListItems}
                           </ul>
                         </div>
 
