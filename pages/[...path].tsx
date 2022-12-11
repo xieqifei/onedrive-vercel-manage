@@ -53,9 +53,11 @@ export default function Folders() {
 
 
   const optionGroupProps = {
-    isShow:true,
-    setUploadingFiles,
+    isShow:isOptionBtnShow,
     uploadingFiles,
+    uploadedFiles,
+    setUploadedFiles,
+    setUploadingFiles,
     setSlideOpen,
     setTotalUploadFileNumber
   }
@@ -77,8 +79,8 @@ export default function Folders() {
 
   const fileListProps = {
   
-    odFolderChildren,
-    setOdFolderChildren,
+    uploadedFiles,
+    setUploadedFiles,
     query
   }
   return (

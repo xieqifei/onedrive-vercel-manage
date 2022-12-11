@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import LimitPromise from '../utils/LimitPromise'
 import { restrictedUpload } from '../utils/uploadFile'
-import { UploadingFile } from '../types'
+import { OdFolderChildren, UploadingFile } from '../types'
 import { formatBytes } from '../utils/formatBytes'
 
 
@@ -14,7 +14,10 @@ const UploadDialog = ({
     uploadingFiles,
     setUploadingFiles,
     setSlideOpen,
-    setTotalUploadFileNumber
+    setTotalUploadFileNumber,
+    uploadedFiles,
+    setUploadedFiles,
+
 }: {
     menuOpen: boolean
     setMenuOpen: Dispatch<SetStateAction<boolean>>
@@ -22,10 +25,11 @@ const UploadDialog = ({
     setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
     setSlideOpen:Dispatch<SetStateAction<boolean>>
     setTotalUploadFileNumber:Dispatch<SetStateAction<number>>
+    uploadedFiles:Array<OdFolderChildren>
+    setUploadedFiles:Dispatch<SetStateAction<Array<OdFolderChildren>>>
 }) => {
     const cancelButtonRef = useRef(null)
     const closeMenu = () => setMenuOpen(false)
-    const [uploadedFiles, setUploadedFiles] = useState(new Array())
     const { asPath } = useRouter()
     const hashedToken = getStoredToken(asPath)
     //limit the maximal number of uploading files to 6
@@ -48,7 +52,7 @@ const UploadDialog = ({
         const uploaded = [...uploadedFiles];
         files.map(async (file) => {
             restrictedUpload(file,asPath,hashedToken,limtReq,uploadingFiles,setUploadingFiles).then((data)=>{
-                uploaded.push(data)
+                uploaded.push(data as unknown as OdFolderChildren)
                 //remove uploaded files from uploading list
                 uploading.map((f, index) => {
                     if (f.name === file.name) {

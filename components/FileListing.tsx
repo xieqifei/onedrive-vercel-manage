@@ -147,18 +147,18 @@ export const Downloading: FC<{ title: string; style: string }> = ({ title, style
 }
 
 const FileListing: FC<{
-  odFolderChildren: Array<OdFolderChildren>,
-  setOdFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
+  uploadedFiles: Array<OdFolderChildren>,
+  setUploadedFiles: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
   query?: ParsedUrlQuery
 }> = ({
-  odFolderChildren,
-  setOdFolderChildren,
+  uploadedFiles,
+  setUploadedFiles,
   query }) => {
     const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
     const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
     const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
     const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})
-
+ 
     const router = useRouter()
     const hashedToken = getStoredToken(router.asPath)
     const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
@@ -200,9 +200,9 @@ const FileListing: FC<{
 
     if ('folder' in responses[0]) {
       // Expand list of API returns into flattened file data
-      const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
-      setOdFolderChildren(folderChildren)
-      
+      let folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
+
+      folderChildren=folderChildren.concat(uploadedFiles)
       // Find README.md file to render
       const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')
 
@@ -322,7 +322,7 @@ const FileListing: FC<{
       const folderProps = {
         toast,
         path,
-        odFolderChildren,
+        folderChildren,
         selected,
         toggleItemSelected,
         totalSelected,

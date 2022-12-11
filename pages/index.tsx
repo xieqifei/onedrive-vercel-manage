@@ -16,14 +16,16 @@ import ProgressSlide from '../components/ProgressSlide'
 export default function Home() {
   
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
-  const [odFolderChildren, setOdFolderChildren] = useState(new Array<OdFolderChildren>)
+  const [uploadedFiles, setUploadedFiles] = useState(new Array<OdFolderChildren>)
   const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
 
   const optionGroupProps = {
     isShow:true,
-    setUploadingFiles,
     uploadingFiles,
+    uploadedFiles,
+    setUploadedFiles,
+    setUploadingFiles,
     setSlideOpen,
     setTotalUploadFileNumber
   }
@@ -43,12 +45,12 @@ export default function Home() {
   }
 
   const fileListProps = {
-    odFolderChildren,
-    setOdFolderChildren
+    uploadedFiles,
+    setUploadedFiles
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900 overflow-y-scroll">
       <Head>
         <title>{siteConfig.title}</title>
       </Head>
