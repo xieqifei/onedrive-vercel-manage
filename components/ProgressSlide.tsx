@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, SetStateAction } from 'react'
+import { Dispatch, Fragment, SetStateAction, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { UploadingFile } from '../types'
 
@@ -24,6 +24,8 @@ export default function ProgressSlide(
     let doneNumber: number = totalUploadFileNumber - uploadingFiles.length
     percent = doneNumber / totalUploadFileNumber * 100
   }
+
+  
 
   const ListItems = uploadingFiles.map((file: UploadingFile) => {
     return (

@@ -21,7 +21,7 @@ const getUploadSession = async (filename: string, parentPath: string, odpt: stri
 //defaut pieceSize is almost 3,3 MB
 //args: file:File object; pieceSize:Byte
 //return chunks,[{'start':start,'end':end,'blob':blob}]
-const sliceFile = (file, pieceSize = 5 * 256 * 256 * 30) => {
+const sliceFile = (file:File, pieceSize = 5 * 256 * 256 * 30) => {
   let totalSize = file.size; //total size of file
   let start = 0; // start byte
   let end = start + pieceSize; // end byte
@@ -46,7 +46,7 @@ const sliceFile = (file, pieceSize = 5 * 256 * 256 * 30) => {
 
 //upload file via upload url to onedrive
 export const uploadFile = async (
-  file,
+  file:File,
   parentPath:string,
   odpt:string|null,
   uploadingFiles:Array<UploadingFile>,
@@ -55,6 +55,7 @@ export const uploadFile = async (
   let uploadUrl = await getUploadSession(file.name,parentPath,odpt)
   let pieceSize = 5 * 256 * 256 * 10
   let start = 0
+  let percent = 0
   
   //do not use map or forEach. they will do all loop at same time,
   //but chunks must be uploaded in order.
@@ -68,7 +69,26 @@ export const uploadFile = async (
       let chunks = sliceFile(file, pieceSize)
       try {
         let running = true
+
+        //update percent in uploading files
+        const updatePercent = ()=>{
+          
+          //accordingto the usestate design,update percent,ui may not be updated
+          //here add a new viariable and copy uploading files.
+          //so usestate will believe this is a new state.
+          //and ui can be updated.
+          let uploadingTemp = [...uploadingFiles]
+          uploadingTemp.map((f,index)=>{
+            if(f.name === file.name){
+              uploadingTemp[index].percent = percent
+            }
+            setUploadingFiles(uploadingTemp)
+          })
+        }
+
+
         while (running) {
+          
           let chunk = chunks[start / pieceSize]
           let reqConfig = {
             headers: {
@@ -88,31 +108,32 @@ export const uploadFile = async (
             //   ]
             start = parseInt(nextExpectedRanges[0].split('-')[0])
 
-            //update progress
-            // let files = [...uploadingFiles]
-            // console.log(files)
-            // files.map((f,index)=>{
-            //   if(f.name===file.name){
-            //       let percent = start/file['size']*100
-            //       files[index].percent = percent
-            //       console.log(percent)
-            //       console.log(files)
-            //   }
-            // })
-            // setUploadingFiles(files)
+            percent = Math.round(start/file.size*100)
+            
+            updatePercent()
+            
           }
           //all upload done
           else if (res.status === 201) {
+            percent = 100
+            updatePercent()
             resolve(res.data)
             running = false
+            
           }
           //file conflict
           else if (res.status === 409) {
             //if error, upload url need to be delete from onedrive server
             axios.delete(uploadUrl)
+            percent = -1
+            updatePercent()
+            
             reject(file.name+': file name conflict. You upload two file with same name')
             running = false
+            
           }
+
+          
         }
       } catch (err) {
         axios.delete(uploadUrl)
@@ -128,7 +149,7 @@ export const uploadFile = async (
 
 //upload file, but limit the number of uploading files
 export const restrictedUpload = (
-  file,
+  file:File,
   parentPath:string,
   odpt:string|null,
   limtReq:LimitPromise,

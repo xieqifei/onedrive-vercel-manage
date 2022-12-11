@@ -1,7 +1,7 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu, Transition } from '@headlessui/react'
-import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
+import { Dispatch, Fragment, SetStateAction, useEffect, useRef } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
 import { AiOutlineEllipsis,AiOutlineUpload ,AiOutlineFolderOpen,AiOutlineFolderAdd} from "react-icons/ai";
 import { formatBytes } from '../utils/formatBytes'
@@ -41,23 +41,22 @@ const OptionGroup = ({
   const limtReq = new LimitPromise(6);
 
   //upload file to onedrive
-  const handleUploadFiles = (files) => {
+  const handleUploadFiles = (files:Array<File>) => {
     let totFileNum: number = uploadingFiles.length + files.length
     setTotalUploadFileNumber(totFileNum)
-    let readyFiles = new Array<UploadingFile>
-    files.map((file) => {
-      readyFiles.push({
+    let uploading = new Array<UploadingFile>
+    files.map((file:File) => {
+      uploading.push({
         name: file.name,
         percent: 0,
         sizeStr: formatBytes(file.size)
       })
     })
-    setUploadingFiles(readyFiles)
+    setUploadingFiles(uploading)
     setSlideOpen(true)
-    const uploading = [...readyFiles]
     const uploaded = [...uploadedFiles];
-    files.map(async (file) => {
-      restrictedUpload(file, asPath, hashedToken, limtReq, uploadingFiles, setUploadingFiles).then((data) => {
+    files.map(async (file:File) => {
+      restrictedUpload(file, asPath, hashedToken, limtReq, uploading, setUploadingFiles).then((data) => {
         uploaded.push(data as unknown as OdFolderChildren)
         //remove uploaded files from uploading list
         uploading.map((f, index) => {
