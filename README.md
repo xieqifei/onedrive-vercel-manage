@@ -6,6 +6,8 @@ Inspired by [onedrive-vercel-index](https://github.com/spencerwooo/onedrive-verc
 
 To know how to deploy this repos, you need to know onedrive-vercel-index firstly. [Get Start](https://ovi.swo.moe/zh/docs/getting-started).
 
+Specially, **DO NOT** run it using defaut command. 
+
 Use `npm install --legacy-peer-deps` instead of `npm i` or `npm install`
 
 Use `npm build` to run it at vercel
@@ -16,12 +18,12 @@ Use `npm run dev` run it on local server
 
 You can create a new file name `.env.local`
 
-add content like below in this file. This REDIS_URL is redis db url, include username, password, host and port. You get free one at redis.io, or other companys.
+add content like below in this file. This REDIS_URL is redis db url, including username, password, host and port. You can get free one at redis.io, or other companys.
 
 ```
 REDIS_URL=redis://default:PSaAoZW**********Fbs2cPB8F1@redis-10009.c300.eu-central-1-1.ec2.cloud.redislabs.com:10989
 ```
 
-then it will perfectly run on your PC
+then it will perfectly run on your local PC
 
-open  `localhost:3000` on your browser
+open  `localhost:3000` on your browser to debug codes
