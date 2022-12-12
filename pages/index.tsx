@@ -18,7 +18,7 @@ export default function Home() {
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
   const [uploadedFiles, setUploadedFiles] = useState(new Array<OdFolderChildren>)
   const [slideOpen, setSlideOpen ] = useState(false)
-  const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
+  const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
 
   const optionGroupProps = {
     isOptionBtnShow:true,
@@ -27,21 +27,20 @@ export default function Home() {
     setUploadedFiles,
     setUploadingFiles,
     setSlideOpen,
-    setTotalUploadFileNumber
+    setTotalUploadFileSize
   }
   const progressSlideProps = {
     uploadingFiles,
     slideOpen,
     setSlideOpen,
-    totalUploadFileNumber,
-    setTotalUploadFileNumber
+    totalUploadFileSize
   }
 
   const progressBtnProps = {
     uploadingFiles,
     slideOpen,
     setSlideOpen,
-    totalUploadFileNumber
+    totalUploadFileSize
   }
 
   const fileListProps = {

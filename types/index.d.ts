@@ -74,5 +74,6 @@ export type OdDriveItem = {
 export type UploadingFile = {
   name:string,
   sizeStr:string,
-  percent:number
+  percent:number,
+  size:number
 }

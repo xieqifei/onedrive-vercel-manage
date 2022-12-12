@@ -43,7 +43,8 @@ const UploadDialog = ({
             readyFiles.push({
                 name: file.name, 
                 percent: 0,
-                sizeStr: formatBytes(file.size)
+                sizeStr: formatBytes(file.size),
+                size: file.size
             })
         })
         setUploadingFiles(readyFiles)

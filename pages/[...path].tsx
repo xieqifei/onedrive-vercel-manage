@@ -48,8 +48,8 @@ export default function Folders() {
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
   const [uploadedFiles, setUploadedFiles] = useState(new Array)
   const [slideOpen, setSlideOpen ] = useState(false)
-  const [totalUploadFileNumber,setTotalUploadFileNumber] = useState(0)
- 
+  const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
+
   const optionGroupProps = {
     isOptionBtnShow,
     uploadingFiles,
@@ -57,29 +57,25 @@ export default function Folders() {
     setUploadedFiles,
     setUploadingFiles,
     setSlideOpen,
-    setTotalUploadFileNumber
+    setTotalUploadFileSize
   }
-
   const progressSlideProps = {
     uploadingFiles,
     slideOpen,
     setSlideOpen,
-    totalUploadFileNumber,
-    setTotalUploadFileNumber
+    totalUploadFileSize
   }
 
   const progressBtnProps = {
     uploadingFiles,
     slideOpen,
     setSlideOpen,
-    totalUploadFileNumber
+    totalUploadFileSize
   }
 
   const fileListProps = {
-  
     uploadedFiles,
-    setUploadedFiles,
-    query
+    setUploadedFiles
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">

@@ -17,12 +17,12 @@ const SwitchLayout = () => {
   const { t } = useTranslation()
 
   return (
-    <div className="relative w-24 flex-shrink-0 text-sm text-gray-600 dark:text-gray-300 md:w-28">
+    <div className="relative w-10 sm:w-24 flex-shrink-0 text-sm text-gray-600 dark:text-gray-300 md:w-28">
       <Listbox value={preferredLayout} onChange={setPreferredLayout}>
         <Listbox.Button className="relative w-full cursor-pointer rounded pl-2">
-          <span className="pointer-events-none flex items-center">
+          <span className="pointer-events-none flex items-center -bottom-1 relative">
             <FontAwesomeIcon className="mr-2 h-3 w-3" icon={preferredLayout.icon} />
-            <span>
+            <span className='hidden sm:block'>
               {
                 // t('Grid')
                 // t('List')
@@ -30,8 +30,8 @@ const SwitchLayout = () => {
               }
             </span>
           </span>
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-            <FontAwesomeIcon className="h-3 w-3" icon="chevron-down" />
+          <span className="pointer-events-none absolute right-0 -bottom-0 flex items-center pr-2">
+            <FontAwesomeIcon className="h-3 w-3 hidden sm:block" icon="chevron-down" />
           </span>
         </Listbox.Button>
 

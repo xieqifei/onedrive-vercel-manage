@@ -1,9 +1,9 @@
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu, Transition } from '@headlessui/react'
-import { Dispatch, Fragment, SetStateAction, useEffect, useRef } from 'react'
+import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
-import { AiOutlineEllipsis,AiOutlineUpload ,AiOutlineFolderOpen,AiOutlineFolderAdd} from "react-icons/ai";
+import { AiOutlineUpload ,AiOutlineFolderOpen,AiOutlineFolderAdd} from "react-icons/ai";
 import { formatBytes } from '../utils/formatBytes'
 import LimitPromise from '../utils/LimitPromise'
 import { useRouter } from 'next/router'
@@ -22,7 +22,7 @@ const OptionGroup = ({
   setUploadedFiles,
   setUploadingFiles,
   setSlideOpen,
-  setTotalUploadFileNumber
+  setTotalUploadFileSize
 }: {
   isOptionBtnShow: boolean
   uploadingFiles: Array<UploadingFile>
@@ -30,26 +30,36 @@ const OptionGroup = ({
   setUploadedFiles: Dispatch<SetStateAction<Array<OdFolderChildren>>>
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
   setSlideOpen: Dispatch<SetStateAction<boolean>>,
-  setTotalUploadFileNumber: Dispatch<SetStateAction<number>>
+  setTotalUploadFileSize: Dispatch<SetStateAction<number>>
 }) => {
 
   const { asPath } = useRouter()
   const uploadInput = useRef<HTMLInputElement>(null)
   const hashedToken = getStoredToken(asPath)
+  // const totFileSize = useRef<number>(0)
 
   //limit the maximal number of uploading files to 6
   const limtReq = new LimitPromise(6);
 
   //upload file to onedrive
   const handleUploadFiles = (files:Array<File>) => {
-    let totFileNum: number = uploadingFiles.length + files.length
-    setTotalUploadFileNumber(totFileNum)
+    //count total size of uploaded files
+    let totFileSize = 0
+    files.map(
+      (f)=>{
+        totFileSize += f.size
+      }
+    )
+    setTotalUploadFileSize(totFileSize)
+
+
     let uploading = new Array<UploadingFile>
     files.map((file:File) => {
       uploading.push({
         name: file.name,
         percent: 0,
-        sizeStr: formatBytes(file.size)
+        sizeStr: formatBytes(file.size),
+        size:file.size
       })
     })
     setUploadingFiles(uploading)
@@ -86,13 +96,13 @@ const OptionGroup = ({
       <Menu as="div" className="relative inline-block text-left ">
         <div>
           <Menu.Button className="relative w-auto flex-shrink-0 text-sm text-gray-600 dark:text-gray-300">
-            <div className='hidden sm:inline'>
+            <div className='inline'>
               Options
               <FontAwesomeIcon className="h-3 w-3" icon="chevron-down" />
             </div>
-            <div className='sm:hidden'>
-              <AiOutlineEllipsis />
-            </div>
+            {/* <div className='sm:hidden'>
+              <SlOptions />
+            </div> */}
 
           </Menu.Button>
         </div>
