@@ -12,11 +12,11 @@ Use `npm build` to run it at vercel
 
 ## Dev
 
-Use `npm run dev` run it on local server 
+Use `npm run dev` run it on local server
 
 You can create a new file name `.env.local`
 
-add content below in this file
+add content like below in this file. This REDIS_URL is redis db url, include username, password, host and port. You get free one at redis.io, or other companys.
 
 ```
 REDIS_URL=redis://default:PSaAoZW**********Fbs2cPB8F1@redis-10009.c300.eu-central-1-1.ec2.cloud.redislabs.com:10989
