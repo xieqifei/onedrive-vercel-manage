@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { getStoredToken } from '../utils/protectedRouteHandler';
 import {createAFolder} from '../utils/createAFolder'
 import { OdFolderChildren } from '../types';
+import { useTranslation } from 'next-i18next';
 
 
 const CreateFolderModal: React.FC<{
@@ -12,19 +13,19 @@ const CreateFolderModal: React.FC<{
     uploadedFiles: Array<OdFolderChildren>,
     setUploadedFiles: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
 }> = ({ openCreateFolderModal, setOpenCreateFolderModal , uploadedFiles,setUploadedFiles}) => {
+    
+    const {t} = useTranslation()
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [modalText, setModalText] = useState('Please input a folder name above!');
+    const [modalText, setModalText] = useState('');
     const folderName = useRef<string>('')
     const { asPath } = useRouter()
     const hashedToken = getStoredToken(asPath)
-
-
-    //
+       //
     const handleOk = () => {
-        setModalText('Creating folder : '+folderName.current);
+        setModalText(t('Creating folder')+' : '+folderName.current);
         setConfirmLoading(true);
         if(folderName.current === ''){
-            setModalText('You have not yet input any name above!')
+            setModalText(t('You have not yet input any name above!'))
             setConfirmLoading(false);
             return 
         }
@@ -34,10 +35,10 @@ const CreateFolderModal: React.FC<{
             folders.push(folderItem as OdFolderChildren)
             setUploadedFiles(folders)
             setConfirmLoading(false);
-            setModalText('Created')
+            setModalText(t('Created'))
             setOpenCreateFolderModal(false);
         }).catch((data)=>{
-            setModalText('Failed')
+            setModalText(t('Failed'))
             setConfirmLoading(false);
         })
     };
@@ -49,24 +50,26 @@ const CreateFolderModal: React.FC<{
     return (
         <>
             <Modal
-                title="Create a folder"
+                title={t("Create a folder")}
                 open={openCreateFolderModal}
                 onOk={handleOk}
                 confirmLoading={confirmLoading}
                 onCancel={handleCancel}
                 okType='primary'
-                okText='Create'
-                cancelText='Cancel'
+                okText={t('Create')}
+                cancelText={t('Cancel')}
                 okButtonProps={{ ghost: true }}
                 destroyOnClose={true}
                 afterClose={()=>{
-                    setModalText('Please input a folder name above!')
+                    setModalText(t('Please input a folder name above!'))
                 }}
             >   
-                <Input placeholder="Please input folder name here!" onChange={(e)=>{
+                <Input placeholder={t("Please input folder name here!")} onChange={(e)=>{
                     folderName.current = e.target.value
-                }} />
-                <p>{modalText}</p>
+                }} onPressEnter={(e)=>{
+                    handleOk()
+                }}/>
+                <p>{modalText?modalText:t('Please input a folder name above!')}</p>
 
             </Modal>
         </>

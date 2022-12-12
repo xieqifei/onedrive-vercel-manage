@@ -120,6 +120,13 @@
   "Uploading":"上傳中",
   "Uploading: {{number}} file(s)":"正在上傳{{number}}個文件",
   "Successfully Upload All Files!":"上傳完畢!",
-  "Upload Progress":"上傳進度"
+  "Upload Progress":"上傳進度",
+  "Creating folder":"正在創建文件夾",
+  "You have not yet input any name above!":"你還沒給文件夾起個名字呢！",
+  "Created":"已創建",
+  "Failed":"失敗",
+  "Create":"創建",
+  "Please input a folder name above!":"請在上方輸入文件夾名字！",
+  "Please input folder name here!":"在這裡輸入文件夾名字！"
 
 }

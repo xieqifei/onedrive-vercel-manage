@@ -11,7 +11,7 @@ import { DownOutlined, UploadOutlined, FolderAddOutlined, FolderOpenOutlined, Pl
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { useTranslation } from 'next-i18next'
-import CreateFolderModal from './CreateFolder'
+import CreateFolderModal from './CreateFolderModal'
 
 
 

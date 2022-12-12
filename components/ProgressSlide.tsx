@@ -41,7 +41,7 @@ export default function ProgressSlide(
               {file.name}
             </p>
             <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-              File Size: {file.sizeStr}
+              t('File size'): {file.sizeStr}
             </p>
           </div>
           <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
@@ -54,7 +54,7 @@ export default function ProgressSlide(
 
   return (
 
-    <Drawer title="Upload Progress" width='60%' placement="right" onClose={onClose} open={slideOpen}>
+    <Drawer title={t("Upload Progress")} width='60%' placement="right" onClose={onClose} open={slideOpen}>
       <div className={uploadingFiles.length === 0 ? 'hidden ' : ''}>
           <div>
             <span> {

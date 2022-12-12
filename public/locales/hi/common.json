@@ -121,6 +121,14 @@
   "Uploading": "अपलोड हो रहा है",
   "Uploading: {{number}} file(s)": "अपलोड हो रही है {{number}} फ़ाइलें",
   "Successfully Upload All Files!": "अपलोड पूर्ण!",
-  "Upload Progress":"अपलोड प्रगति"
+  "Upload Progress":"अपलोड प्रगति",
+
+  "Creating folder": "फ़ोल्डर बनाना",
+   "You have not yet input any name above!": "आपने अभी तक ऊपर कोई नाम नहीं डाला है!",
+   "Created": "बनाया गया",
+   "Failed": "असफल",
+   "Create": "बनाएँ",
+   "Please input a folder name above!": "कृपया ऊपर एक फ़ोल्डर नाम दर्ज करें!",
+   "Please input folder name here!": "यहाँ फ़ोल्डर का नाम दर्ज करें!"
 
 }

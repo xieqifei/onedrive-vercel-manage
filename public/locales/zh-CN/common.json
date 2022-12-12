@@ -121,5 +121,14 @@
   "Uploading":"上传中",
   "Uploading: {{number}} file(s)":"正在上传{{number}}个文件",
   "Successfully Upload All Files!":"上传完毕!",
-  "Upload Progress":"上传进程"
+  "Upload Progress":"上传进程",
+
+  "Creating folder":"正在创建文件夹",
+  "You have not yet input any name above!":"你还没给文件夹起个名字呢！",
+  "Created":"已创建",
+  "Failed":"失败",
+  "Create":"创建",
+  "Please input a folder name above!":"请在上方输入文件夹名字！",
+  "Please input folder name here!":"在这里输入文件夹名字！"
+
 }

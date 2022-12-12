@@ -124,7 +124,15 @@
   "Uploading": "Yükleniyor",
   "Uploading: {{number}} file(s)": "{{number}} dosya yükleniyor",
   "Successfully Upload All Files!": "Yükleme tamamlandı!",
-  "Upload Progress":"Yükleme İlerlemesi"
+  "Upload Progress":"Yükleme İlerlemesi",
+
+  "Creating folder": "Klasör oluşturuluyor",
+   "You have not yet input any name above!": "Yukarıya henüz herhangi bir isim girmediniz!",
+   "Created": "Oluşturuldu",
+   "Failed": "Başarısız",
+   "Create": "Oluştur",
+   "Please input a folder name above!": "Lütfen yukarıya bir klasör adı girin!",
+   "Please input folder name here!": "Klasör adını buraya girin!"
 
 
 }

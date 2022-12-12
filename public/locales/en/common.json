@@ -125,6 +125,15 @@
   "Uploading":"Uploading",
   "Uploading: {{number}} file(s)":"Uploading: {{number}} file(s)",
   "Successfully Upload All Files!":"Successfully Upload All Files!",
-  "Upload Progress":"Upload Progress"
+  "Upload Progress":"Upload Progress",
+  
+  "Creating folder":"Creating folder",
+  "You have not yet input any name above!":"You have not yet input any name above!",
+  "Created":"Created",
+  "Failed":"Failed",
+  "Create":"Create",
+  "Please input a folder name above!":"Please input a folder name above!",
+  "Please input folder name here!":"Please input folder name here!"
+
 
 }
