@@ -201,8 +201,15 @@ const FileListing: FC<{
     if ('folder' in responses[0]) {
       // Expand list of API returns into flattened file data
       const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
-      
-      folderChildren.push(...uploadedFiles)
+      uploadedFiles.map(
+        (f)=>{
+          if('folder' in f){
+            folderChildren.unshift(f)
+          }else{
+            folderChildren.push(f)
+          }
+        }
+      )
       // Find README.md file to render
       const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')
 

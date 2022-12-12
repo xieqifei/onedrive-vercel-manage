@@ -1,5 +1,5 @@
 
-import { Dispatch, SetStateAction, useRef } from 'react'
+import { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
 import { formatBytes } from '../utils/formatBytes'
 import LimitPromise from '../utils/LimitPromise'
@@ -7,10 +7,11 @@ import { useRouter } from 'next/router'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import { restrictedUpload } from '../utils/uploadFile'
 
-import { DownOutlined, UploadOutlined,FolderAddOutlined,FolderOpenOutlined,PlusOutlined } from '@ant-design/icons';
+import { DownOutlined, UploadOutlined, FolderAddOutlined, FolderOpenOutlined, PlusOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { useTranslation } from 'next-i18next'
+import CreateFolderModal from './CreateFolder'
 
 
 
@@ -31,7 +32,7 @@ const OptionGroup = ({
   setSlideOpen: Dispatch<SetStateAction<boolean>>,
   setTotalUploadFileSize: Dispatch<SetStateAction<number>>
 }) => {
-
+  const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const { asPath } = useRouter()
   const uploadInput = useRef<HTMLInputElement>(null)
   const hashedToken = getStoredToken(asPath)
@@ -90,18 +91,28 @@ const OptionGroup = ({
     handleUploadFiles(chosenFiles);
   }
 
+  const createFolderModalProps = {
+    openCreateFolderModal,
+    setOpenCreateFolderModal,
+    uploadedFiles,
+    setUploadedFiles,
+  }
+
   const items: MenuProps['items'] = [
     {
       key: '1',
       label: (
-        <a
-          href="#"
+        <>
+          <CreateFolderModal {...createFolderModalProps} />
+          <a
+            onClick={() => { setOpenCreateFolderModal(true) }}
+          >
+            {t('Create a folder')}
+          </a>
+        </>
 
-        >
-          {t('Create a folder')}
-        </a>
       ),
-      icon:<FolderAddOutlined />
+      icon: <FolderAddOutlined />
     },
     {
       key: '2',
@@ -114,7 +125,7 @@ const OptionGroup = ({
           }}
         >
           {t('Upload files')}
-          
+
         </a>
       </>
       ),
@@ -129,7 +140,7 @@ const OptionGroup = ({
           {t("Upload folder")}
         </a>
       ),
-      icon:<FolderOpenOutlined />
+      icon: <FolderOpenOutlined />
     },
 
   ];
@@ -139,9 +150,9 @@ const OptionGroup = ({
       <a onClick={(e) => e.preventDefault()}  >
         <Space className='hidden sm:flex'>
           <span className='inline'>{t('Add')}</span>
-          <DownOutlined className="inline float-right"/>
+          <DownOutlined className="inline float-right" />
         </Space>
-        <PlusOutlined className='sm:hidden '/>
+        <PlusOutlined className='sm:hidden ' />
       </a>
     </Dropdown>
 
