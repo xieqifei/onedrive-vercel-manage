@@ -75,7 +75,8 @@ export default function Folders() {
 
   const fileListProps = {
     uploadedFiles,
-    setUploadedFiles
+    setUploadedFiles,
+    query
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
