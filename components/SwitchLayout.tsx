@@ -30,7 +30,7 @@ const SwitchLayout = () => {
               }
             </span>
           </span>
-          <span className="pointer-events-none absolute right-0 -bottom-0 flex items-center pr-2">
+          <span className="pointer-events-none absolute right-0 bottom-0 flex items-center pr-2">
             <FontAwesomeIcon className="h-3 w-3 hidden sm:block" icon="chevron-down" />
           </span>
         </Listbox.Button>

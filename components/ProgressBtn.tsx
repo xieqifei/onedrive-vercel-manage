@@ -1,8 +1,8 @@
 
 import { Dispatch, SetStateAction } from "react"
 import { UploadingFile } from "../types"
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import { Progress, Space } from 'antd';
+import { useTranslation } from "next-i18next";
 
 export default function ProgressBtn(
   {
@@ -25,17 +25,16 @@ export default function ProgressBtn(
     })
     percent = Math.round(finishedSize / totalUploadFileSize * 100)
   }
-
+  const { t } = useTranslation()
 
   return (
-    <div className={uploadingFiles.length === 0 ? 'hidden ' : 'inline-block ' + 'float-right mr-4'}>
+    <div className={(uploadingFiles.length === 0 ? 'hidden ' : '') + 'float-right mr-2'}>
       {/* <div className={'inline-block '+'float-right mr-4'}> */}
-      <button className={"relative w-auto flex-shrink-0 text-sm text-gray-600 dark:text-gray-300 grid grid-cols-1 md:grid-cols-6"} onClick={() => { setSlideOpen(!slideOpen) }}>
-        {/* <Circles className="col-span-1" height={'18'} width='18' speed='2' fill='#06bcee'/> */}
-        <div style={{ width: 18, height: 18 }} className='col-span-1'>
-          <CircularProgressbar value={percent} />
-        </div>
-        <p className="hidden md:col-span-5 md:grid">Uploading...</p>
+      <button className={"relative w-auto flex-shrink-0 inset-y-0  text-sm text-gray-600 dark:text-gray-300 grid grid-cols-1 md:grid-cols-6"} onClick={() => { setSlideOpen(!slideOpen) }}>
+        
+        <Progress type="circle" width={20} percent={percent} className='col-span-1 ' strokeColor={{ '0%': '#108ee9', '100%': '#87d068' }} />
+        
+        <p className="hidden md:col-span-5 md:grid">{t('Uploading')}...</p>
       </button>
     </div>
 

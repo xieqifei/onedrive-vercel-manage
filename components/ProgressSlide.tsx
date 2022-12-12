@@ -1,6 +1,7 @@
 import { Dispatch, Fragment, SetStateAction } from 'react'
 import { UploadingFile } from '../types'
 import { Progress , Result, Drawer } from 'antd';
+import { useTranslation } from 'next-i18next';
 
 export default function ProgressSlide(
   {
@@ -15,6 +16,9 @@ export default function ProgressSlide(
     totalUploadFileSize: number
   }
 ) {
+  const {t} = useTranslation()
+
+
   let percent: number = 0
   if (totalUploadFileSize !== 0) {
     let finishedSize: number = 0
@@ -50,10 +54,12 @@ export default function ProgressSlide(
 
   return (
 
-    <Drawer title="Upload Progress" width='278' placement="right" onClose={onClose} open={slideOpen}>
+    <Drawer title="Upload Progress" width='60%' placement="right" onClose={onClose} open={slideOpen}>
       <div className={uploadingFiles.length === 0 ? 'hidden ' : ''}>
           <div>
-            <span>Uploading: {uploadingFiles.length} file(s)</span>
+            <span> {
+              t('Uploading: {{number}} file(s)',{number:uploadingFiles.length})
+            } </span>
             <Progress percent={percent} size="small" />
           </div>
 
@@ -67,7 +73,7 @@ export default function ProgressSlide(
         <div className={uploadingFiles.length > 0 ? 'hidden' : 'inline'}>
           <Result
             status="success"
-            title="Successfully Upload All Files!"
+            title={t('Successfully Upload All Files!')}
           />
         </div>
     </Drawer>

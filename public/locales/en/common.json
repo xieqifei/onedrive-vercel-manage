@@ -116,5 +116,15 @@
   "Welcome to your new onedrive-vercel-index 🎉": "Welcome to your new onedrive-vercel-index 🎉",
   "What is this?": "What is this?",
   "Where is the auth code? Did you follow step 2 you silly donut?": "Where is the auth code? Did you follow step 2 you silly donut?",
-  "Whoops, looks like we got a problem: {{error}}.": "Whoops, looks like we got a problem: {{error}}."
+  "Whoops, looks like we got a problem: {{error}}.": "Whoops, looks like we got a problem: {{error}}.",
+
+  "Create a folder":"Create a folder",
+  "Upload files":"Upload files",
+  "Upload folder":"Upload folder",
+  "Add":"Add",
+  "Uploading":"Uploading",
+  "Uploading: {{number}} file(s)":"Uploading: {{number}} file(s)",
+  "Successfully Upload All Files!":"Successfully Upload All Files!",
+  "Upload Progress":"Upload Progress"
+
 }

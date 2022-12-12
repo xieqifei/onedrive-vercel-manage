@@ -28,6 +28,15 @@ export function encodePath(path: string): string {
   return `:${encodeURIComponent(encodedPath)}`
 }
 
+export function rawPath(path: string): string {
+  let encodedPath = pathPosix.join(basePath, path)
+  if (encodedPath === '/' || encodedPath === '') {
+    return ''
+  }
+  encodedPath = encodedPath.replace(/\/$/, '')
+  return encodedPath
+}
+
 /**
  * Fetch the access token from Redis storage and check if the token requires a renew
  *

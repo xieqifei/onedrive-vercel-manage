@@ -116,5 +116,15 @@
   "Welcome to your new onedrive-vercel-index 🎉": "Onedrive-vercel-index'inize hoş geldiniz 🎉",
   "What is this?": "Bu Nedir?",
   "Where is the auth code? Did you follow step 2 you silly donut?": "Yetkilendirme kodu nerede? 2. adımı izledin mi seni Aptal ?",
-  "Whoops, looks like we got a problem: {{error}}.": "Hata! Bir sorunumuz var gibi görünüyor: {{error}}."
+  "Whoops, looks like we got a problem: {{error}}.": "Hata! Bir sorunumuz var gibi görünüyor: {{error}}.",
+  "Create a folder": "Yeni bir klasör oluştur",
+  "Upload files": "Dosyaları yükle",
+  "Upload folder": "Yükleme Klasörü",
+  "Add": "Ekle",
+  "Uploading": "Yükleniyor",
+  "Uploading: {{number}} file(s)": "{{number}} dosya yükleniyor",
+  "Successfully Upload All Files!": "Yükleme tamamlandı!",
+  "Upload Progress":"Yükleme İlerlemesi"
+
+
 }

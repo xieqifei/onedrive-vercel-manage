@@ -112,5 +112,14 @@
   "Welcome to your new onedrive-vercel-index 🎉": "歡迎來到全新的 onedrive-vercel-index 🎉",
   "What is this?": "這是什麼？",
   "Where is the auth code? Did you follow step 2 you silly donut?": "授權碼在哪裡？你有跟著第 2 步完成了嗎？o(￣ヘ￣o＃)",
-  "Whoops, looks like we got a problem: {{error}}.": "Whoops，看來現在遇到一些問題：{{error}}"
+  "Whoops, looks like we got a problem: {{error}}.": "Whoops，看來現在遇到一些問題：{{error}}",
+  "Create a folder":"新建文件夾",
+  "Upload files":"上傳文件",
+  "Upload folder":"上傳文件夾",
+  "Add":"添加",
+  "Uploading":"上傳中",
+  "Uploading: {{number}} file(s)":"正在上傳{{number}}個文件",
+  "Successfully Upload All Files!":"上傳完畢!",
+  "Upload Progress":"上傳進度"
+
 }
