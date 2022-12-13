@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     try {
         // Handle response from OneDrive API
-        const requestUrl = `${driveApi}/items/itemid`        
+        const requestUrl = `${driveApi}/items/${itemid}`        
         const reqConfig = {
             headers: { 'Authorization': `Bearer ${accessToken}`},
         }
