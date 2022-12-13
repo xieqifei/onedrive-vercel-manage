@@ -130,18 +130,7 @@ const OptionGroup = ({
       </>
       ),
       icon: <UploadOutlined />,
-    },
-    {
-      key: '3',
-      label: (
-        <a
-          href="#"
-        >
-          {t("Upload folder")}
-        </a>
-      ),
-      icon: <FolderOpenOutlined />
-    },
+    }
 
   ];
 
