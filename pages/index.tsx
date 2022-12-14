@@ -7,7 +7,7 @@ import FileListing from '../components/FileListing'
 import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { UploadingFile ,OdFolderChildren} from '../types'
 import OptionGroup from '../components/OptionGroup'
 import ProgressBtn from '../components/ProgressBtn'
@@ -19,9 +19,11 @@ export default function Home() {
   const [uploadedFiles, setUploadedFiles] = useState(new Array<OdFolderChildren>)
   const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
+  const [isOptionBtnShow,setIsOptionBtnShow] = useState(true)
+  const exsitedFiles = useRef<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
 
   const optionGroupProps = {
-    isOptionBtnShow:true,
+    isOptionBtnShow,
     uploadingFiles,
     uploadedFiles,
     setUploadedFiles,
@@ -45,7 +47,9 @@ export default function Home() {
 
   const fileListProps = {
     uploadedFiles,
-    setUploadedFiles
+    setUploadedFiles,
+    setIsOptionBtnShow,
+    exsitedFiles:exsitedFiles.current
   }
 
   return (

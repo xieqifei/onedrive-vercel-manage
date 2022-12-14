@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (status !== 204) {
             res.status(status).json({data})
         } else {
-            res.status(204).json(data)
+            res.status(204)
         }
     } catch (error: any) {
         // res.status(400).json(error)

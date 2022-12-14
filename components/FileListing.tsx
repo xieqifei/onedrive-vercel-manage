@@ -1,6 +1,6 @@
 import type { OdFileObject, OdFolderChildren, OdFolderObject } from '../types'
 import { ParsedUrlQuery } from 'querystring'
-import { Dispatch, FC, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dispatch, FC, MouseEventHandler, Ref, SetStateAction, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import toast, { Toaster } from 'react-hot-toast'
 import emojiRegex from 'emoji-regex'
@@ -149,16 +149,20 @@ export const Downloading: FC<{ title: string; style: string }> = ({ title, style
 const FileListing: FC<{
   uploadedFiles: Array<OdFolderChildren>,
   setUploadedFiles: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
-  query?: ParsedUrlQuery
+  setIsOptionBtnShow: Dispatch<SetStateAction<boolean>>
+  query?: ParsedUrlQuery,
+  exsitedFiles: Array<OdFolderChildren>
 }> = ({
   uploadedFiles,
   setUploadedFiles,
-  query }) => {
+  setIsOptionBtnShow,
+  query,
+  exsitedFiles }) => {
     const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
     const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
     const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
     const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})
- 
+
     const router = useRouter()
     const hashedToken = getStoredToken(router.asPath)
     const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
@@ -168,6 +172,18 @@ const FileListing: FC<{
     const path = queryToPath(query)
 
     const { data, error, size, setSize } = useProtectedSWRInfinite(path)
+
+    useEffect(() => {
+      let responses: any[] = data ? [].concat(...data) : []
+      if (responses[0] && 'folder' in responses[0]) {
+        setIsOptionBtnShow(true)
+      }
+      else {
+        setIsOptionBtnShow(false)
+      }
+
+      
+    })
 
     if (error) {
       // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
@@ -198,18 +214,22 @@ const FileListing: FC<{
     const isReachingEnd = isEmpty || (data && typeof data[data.length - 1]?.next === 'undefined')
     const onlyOnePage = data && typeof data[0].next === 'undefined'
 
+
     if ('folder' in responses[0]) {
+      //if this page is folder,then option button group shows
+
       // Expand list of API returns into flattened file data
       const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
       uploadedFiles.map(
-        (f)=>{
-          if('folder' in f){
+        (f) => {
+          if ('folder' in f) {
             folderChildren.unshift(f)
-          }else{
+          } else {
             folderChildren.push(f)
           }
         }
       )
+      // exsitedFiles = folderChildren
       // Find README.md file to render
       const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')
 
