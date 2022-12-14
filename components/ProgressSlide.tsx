@@ -41,7 +41,7 @@ export default function ProgressSlide(
               {file.name}
             </p>
             <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-              t('File size'): {file.sizeStr}
+              {t('File size')}: {file.sizeStr}
             </p>
           </div>
           <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

@@ -10,9 +10,9 @@ import { useTranslation } from 'next-i18next';
 const CreateFolderModal: React.FC<{
     openCreateFolderModal: boolean,
     setOpenCreateFolderModal: Dispatch<SetStateAction<boolean>>,
-    uploadedFiles: Array<OdFolderChildren>,
-    setUploadedFiles: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
-}> = ({ openCreateFolderModal, setOpenCreateFolderModal , uploadedFiles,setUploadedFiles}) => {
+    folderChildren: Array<OdFolderChildren>,
+    setFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
+}> = ({ openCreateFolderModal, setOpenCreateFolderModal ,folderChildren,setFolderChildren}) => {
     
     const {t} = useTranslation()
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -31,9 +31,9 @@ const CreateFolderModal: React.FC<{
         }
         createAFolder(folderName.current,asPath,hashedToken).then((folderItem)=>{
             //update UI with new folder 
-            let folders = [...uploadedFiles]
-            folders.push(folderItem as OdFolderChildren)
-            setUploadedFiles(folders)
+            let folders = [...folderChildren]
+            folders.unshift(folderItem as OdFolderChildren)
+            setFolderChildren(folders)
             setConfirmLoading(false);
             setModalText(t('Created'))
             setOpenCreateFolderModal(false);

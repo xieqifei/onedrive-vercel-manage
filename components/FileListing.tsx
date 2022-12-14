@@ -147,17 +147,16 @@ export const Downloading: FC<{ title: string; style: string }> = ({ title, style
 }
 
 const FileListing: FC<{
-  uploadedFiles: Array<OdFolderChildren>,
-  setUploadedFiles: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
+  folderChildren:Array<OdFolderChildren>,
+  setFolderChildren:Dispatch<SetStateAction<Array<OdFolderChildren>>>,
   setIsOptionBtnShow: Dispatch<SetStateAction<boolean>>
-  query?: ParsedUrlQuery,
-  exsitedFiles: Array<OdFolderChildren>
+  query?: ParsedUrlQuery
 }> = ({
-  uploadedFiles,
-  setUploadedFiles,
+  folderChildren,
+  setFolderChildren,
   setIsOptionBtnShow,
   query,
-  exsitedFiles }) => {
+   }) => {
     const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
     const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
     const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
@@ -173,17 +172,24 @@ const FileListing: FC<{
 
     const { data, error, size, setSize } = useProtectedSWRInfinite(path)
 
+  
     useEffect(() => {
+      let isFolderInit=false
       let responses: any[] = data ? [].concat(...data) : []
       if (responses[0] && 'folder' in responses[0]) {
         setIsOptionBtnShow(true)
-      }
-      else {
+        if(!isFolderInit){
+          let folder = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
+          setFolderChildren(folder)
+          isFolderInit =true
+        }
+        
+      }else {
         setIsOptionBtnShow(false)
       }
+    },[data])
 
-      
-    })
+    
 
     if (error) {
       // If error includes 403 which means the user has not completed initial setup, redirect to OAuth page
@@ -214,21 +220,20 @@ const FileListing: FC<{
     const isReachingEnd = isEmpty || (data && typeof data[data.length - 1]?.next === 'undefined')
     const onlyOnePage = data && typeof data[0].next === 'undefined'
 
-
-    if ('folder' in responses[0]) {
+    if ('folder' in responses[0] && folderChildren) {
       //if this page is folder,then option button group shows
 
       // Expand list of API returns into flattened file data
-      const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
-      uploadedFiles.map(
-        (f) => {
-          if ('folder' in f) {
-            folderChildren.unshift(f)
-          } else {
-            folderChildren.push(f)
-          }
-        }
-      )
+      // const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
+      // uploadedFiles.map(
+      //   (f) => {
+      //     if ('folder' in f) {
+      //       folderChildren.unshift(f)
+      //     } else {
+      //       folderChildren.push(f)
+      //     }
+      //   }
+      // )
       // exsitedFiles = folderChildren
       // Find README.md file to render
       const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')

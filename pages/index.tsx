@@ -16,17 +16,15 @@ import ProgressSlide from '../components/ProgressSlide'
 export default function Home() {
   
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
-  const [uploadedFiles, setUploadedFiles] = useState(new Array<OdFolderChildren>)
   const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
   const [isOptionBtnShow,setIsOptionBtnShow] = useState(true)
-  const exsitedFiles = useRef<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
+  const [folderChildren,setFolderChildren] = useState(new Array<OdFolderChildren>)
 
   const optionGroupProps = {
     isOptionBtnShow,
-    uploadingFiles,
-    uploadedFiles,
-    setUploadedFiles,
+    folderChildren,
+    setFolderChildren,
     setUploadingFiles,
     setSlideOpen,
     setTotalUploadFileSize
@@ -46,10 +44,9 @@ export default function Home() {
   }
 
   const fileListProps = {
-    uploadedFiles,
-    setUploadedFiles,
-    setIsOptionBtnShow,
-    exsitedFiles:exsitedFiles.current
+    folderChildren,
+    setFolderChildren,
+    setIsOptionBtnShow
   }
 
   return (

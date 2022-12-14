@@ -17,17 +17,15 @@ import CreateFolderModal from './CreateFolderModal'
 
 const OptionGroup = ({
   isOptionBtnShow,
-  uploadingFiles,
-  uploadedFiles,
-  setUploadedFiles,
+  folderChildren,
+  setFolderChildren,
   setUploadingFiles,
   setSlideOpen,
   setTotalUploadFileSize
 }: {
   isOptionBtnShow: boolean
-  uploadingFiles: Array<UploadingFile>
-  uploadedFiles: Array<OdFolderChildren>
-  setUploadedFiles: Dispatch<SetStateAction<Array<OdFolderChildren>>>
+  folderChildren:Array<OdFolderChildren>
+  setFolderChildren:Dispatch<SetStateAction<Array<OdFolderChildren>>>
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
   setSlideOpen: Dispatch<SetStateAction<boolean>>,
   setTotalUploadFileSize: Dispatch<SetStateAction<number>>
@@ -66,9 +64,10 @@ const OptionGroup = ({
     })
     setUploadingFiles(uploading)
     setSlideOpen(true)
-    const uploaded = [...uploadedFiles];
+    const uploaded:Array<OdFolderChildren> = [];
     files.map(async (file: File) => {
       restrictedUpload(file, asPath, hashedToken, limtReq, uploading, setUploadingFiles).then((data) => {
+        
         uploaded.push(data as unknown as OdFolderChildren)
         //remove uploaded files from uploading list
         uploading.map((f, index) => {
@@ -78,7 +77,8 @@ const OptionGroup = ({
         })
         let uploadingTemp = [...uploading]
         setUploadingFiles(uploadingTemp);
-        setUploadedFiles(uploaded);
+        let folder = [...folderChildren]
+        setFolderChildren(folder.concat(uploaded))
       }).catch((err) => {
         console.log(err)
       })
@@ -87,15 +87,14 @@ const OptionGroup = ({
 
   const handleFileEvent = (e: { target: { files: any } }) => {
     const chosenFiles = Array.prototype.slice.call(e.target.files)
-    // setMenuOpen(false)
     handleUploadFiles(chosenFiles);
   }
 
   const createFolderModalProps = {
     openCreateFolderModal,
     setOpenCreateFolderModal,
-    uploadedFiles,
-    setUploadedFiles,
+    folderChildren,
+    setFolderChildren,
   }
 
   const items: MenuProps['items'] = [

@@ -8,55 +8,25 @@ import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
 import OptionGroup from '../components/OptionGroup'
-import { extensions } from '../utils/getPreviewType'
-import { useRef, useState } from 'react'
+import {  useState } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 
-const isPathDirectory =(path:string | string[] | undefined)=>{
-  if(typeof (path) === "string" ){
-    let pathPart = path.split('.')
-    if(pathPart.length===1){
-
-      return true
-    }else{
-      let isNotFile = true
-      Object.keys(extensions).map(
-        (key,index)=>{
-          if(pathPart[pathPart.length-1] === key){
-            isNotFile = false
-          }
-        }
-      )
-
-      return isNotFile
-    }
-  }else{
-    console.log(path)
-
-    return false
-  }
-}
 
 export default function Folders() {
   const { query } = useRouter()
-  let { path } = query
-  let pathStr = typeof(path) !=="object"?path:path[path.length-1]
-  // let isOptionBtnShow = isPathDirectory(pathStr)?true:false
 
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
-  const [uploadedFiles, setUploadedFiles] = useState(new Array)
   const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
   const [isOptionBtnShow,setIsOptionBtnShow] = useState(true)
-  const exsitedFiles = useRef<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
+  const [folderChildren,setFolderChildren] = useState<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
 
   const optionGroupProps = {
     isOptionBtnShow,
-    uploadingFiles,
-    uploadedFiles,
-    setUploadedFiles,
+    folderChildren,
+    setFolderChildren,
     setUploadingFiles,
     setSlideOpen,
     setTotalUploadFileSize
@@ -76,11 +46,10 @@ export default function Folders() {
   }
 
   const fileListProps = {
-    uploadedFiles,
-    setUploadedFiles,
+    folderChildren,
+    setFolderChildren,
     setIsOptionBtnShow,
-    query,
-    exsitedFiles:exsitedFiles.current
+    query
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
