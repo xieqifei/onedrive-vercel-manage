@@ -149,15 +149,18 @@ export const Downloading: FC<{ title: string; style: string }> = ({ title, style
 const FileListing: FC<{
   folderChildren:Array<OdFolderChildren>,
   setFolderChildren:Dispatch<SetStateAction<Array<OdFolderChildren>>>,
-  setIsOptionBtnShow: Dispatch<SetStateAction<boolean>>
-  query?: ParsedUrlQuery
+  setIsOptionBtnShow: Dispatch<SetStateAction<boolean>>,
+  query?: ParsedUrlQuery,
+  selected:{ [key: string]: boolean },
+  setSelected:Dispatch<SetStateAction<{ [key: string]: boolean }>>
 }> = ({
   folderChildren,
   setFolderChildren,
   setIsOptionBtnShow,
   query,
+  selected,
+  setSelected
    }) => {
-    const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
     const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
     const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
     const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})

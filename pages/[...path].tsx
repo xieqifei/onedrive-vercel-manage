@@ -22,6 +22,7 @@ export default function Folders() {
   const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
   const [isOptionBtnShow,setIsOptionBtnShow] = useState(true)
   const [folderChildren,setFolderChildren] = useState<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
+  const [isDeleteBtnShow,setIsDeleteBtnShow] = useState(false)
 
   const optionGroupProps = {
     isOptionBtnShow,

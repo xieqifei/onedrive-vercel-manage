@@ -8,18 +8,20 @@ import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
 import { useEffect, useRef, useState } from 'react'
-import { UploadingFile ,OdFolderChildren} from '../types'
+import { UploadingFile, OdFolderChildren } from '../types'
 import OptionGroup from '../components/OptionGroup'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 
 export default function Home() {
-  
-  const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
-  const [slideOpen, setSlideOpen ] = useState(false)
-  const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
-  const [isOptionBtnShow,setIsOptionBtnShow] = useState(true)
-  const [folderChildren,setFolderChildren] = useState(new Array<OdFolderChildren>)
+
+  const [uploadingFiles, setUploadingFiles] = useState(new Array<UploadingFile>)
+  const [slideOpen, setSlideOpen] = useState(false)
+  const [totalUploadFileSize, setTotalUploadFileSize] = useState(0)
+  const [isOptionBtnShow, setIsOptionBtnShow] = useState(true)
+  const [folderChildren, setFolderChildren] = useState(new Array<OdFolderChildren>)
+  const [isDeleteBtnShow, setIsDeleteBtnShow] = useState(false)
+  const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
 
   const optionGroupProps = {
     isOptionBtnShow,
@@ -46,7 +48,9 @@ export default function Home() {
   const fileListProps = {
     folderChildren,
     setFolderChildren,
-    setIsOptionBtnShow
+    setIsOptionBtnShow,
+    selected,
+    setSelected
   }
 
   return (
@@ -55,24 +59,24 @@ export default function Home() {
         <title>{siteConfig.title}</title>
       </Head>
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
-        <ProgressSlide {...progressSlideProps}/>
+        <ProgressSlide {...progressSlideProps} />
 
         <Navbar />
-        
+
 
         <div className="mx-auto w-full max-w-5xl p-4">
-          
+
           <nav className="mb-4 flex items-center justify-between pl-1">
-          
+
             <Breadcrumb />
             <div className='flex'>
-            <OptionGroup {...optionGroupProps}/>
-            <ProgressBtn {...progressBtnProps}/>
-            
-            <SwitchLayout />
+              <OptionGroup {...optionGroupProps} />
+              <ProgressBtn {...progressBtnProps} />
+
+              <SwitchLayout />
             </div>
           </nav>
-          <FileListing {...fileListProps}/>
+          <FileListing {...fileListProps} />
         </div>
       </main>
 
