@@ -9,7 +9,7 @@ import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
 import OptionGroup from '../components/OptionGroup'
 import { extensions } from '../utils/getPreviewType'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
@@ -43,12 +43,14 @@ export default function Folders() {
   const { query } = useRouter()
   let { path } = query
   let pathStr = typeof(path) !=="object"?path:path[path.length-1]
-  let isOptionBtnShow = isPathDirectory(pathStr)?true:false
+  // let isOptionBtnShow = isPathDirectory(pathStr)?true:false
 
   const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
   const [uploadedFiles, setUploadedFiles] = useState(new Array)
   const [slideOpen, setSlideOpen ] = useState(false)
   const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
+  const [isOptionBtnShow,setIsOptionBtnShow] = useState(true)
+  const exsitedFiles = useRef<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
 
   const optionGroupProps = {
     isOptionBtnShow,
@@ -76,7 +78,9 @@ export default function Folders() {
   const fileListProps = {
     uploadedFiles,
     setUploadedFiles,
-    query
+    setIsOptionBtnShow,
+    query,
+    exsitedFiles:exsitedFiles.current
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
