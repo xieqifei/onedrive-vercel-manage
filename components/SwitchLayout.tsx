@@ -10,7 +10,9 @@ export const layouts: Array<{ id: number; name: 'Grid' | 'List'; icon: IconProp 
   { id: 2, name: 'Grid', icon: 'th' },
 ]
 
-const SwitchLayout = () => {
+const SwitchLayout = (
+  {isFolderPage}:{isFolderPage:boolean}
+) => {
   const [preferredLayout, setPreferredLayout] = useLocalStorage('preferredLayout', layouts[0])
 
   const { t } = useTranslation()
@@ -23,7 +25,7 @@ const SwitchLayout = () => {
   }
 
   return (
-     <Switch checkedChildren={t('List')} unCheckedChildren={t('Grid')} defaultChecked onChange={changeLayout} style={{backgroundColor:'rgb(14 165 233)'}}/>
+     <Switch checkedChildren={t('List')} className={isFolderPage?'':'hidden'} unCheckedChildren={t('Grid')} checked = {preferredLayout.id==1?true:false} onChange={changeLayout} style={{backgroundColor:'rgb(14 165 233)'}}/>
       
   )
 }

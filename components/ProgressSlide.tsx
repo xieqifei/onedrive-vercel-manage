@@ -8,25 +8,17 @@ export default function ProgressSlide(
     uploadingFiles,
     slideOpen,
     setSlideOpen,
-    totalUploadFileSize
+    uploadProgress
   }: {
     uploadingFiles: Array<UploadingFile>
     slideOpen: boolean
     setSlideOpen: Dispatch<SetStateAction<boolean>>
-    totalUploadFileSize: number
+    uploadProgress: number
   }
 ) {
   const {t} = useTranslation()
 
 
-  let percent: number = 0
-  if (totalUploadFileSize !== 0) {
-    let finishedSize: number = 0
-    uploadingFiles.map((f) => {
-      finishedSize += f.size * f.percent / 100
-    })
-    percent = Math.round(finishedSize / totalUploadFileSize * 100)
-  }
 
   const onClose = () => {
     setSlideOpen(false);
@@ -60,7 +52,7 @@ export default function ProgressSlide(
             <span> {
               t('Uploading: {{number}} file(s)',{number:uploadingFiles.length})
             } </span>
-            <Progress percent={percent} size="small" />
+            <Progress percent={uploadProgress} size="small" />
           </div>
 
           {/* uploading file list */}

@@ -16,41 +16,42 @@ import DeleteBtn from '../components/DeleteBtn'
 
 export default function Home() {
 
-  const [uploadingFiles, setUploadingFiles] = useState(new Array<UploadingFile>)
+  const [uploadingFiles, setUploadingFiles] = useState<Array<UploadingFile>>(new Array<UploadingFile>)
   const [slideOpen, setSlideOpen] = useState(false)
-  const [totalUploadFileSize, setTotalUploadFileSize] = useState(0)
-  const [isOptionBtnShow, setIsOptionBtnShow] = useState(true)
+  const [isFolderPage, setIsFolderPage] = useState(true)
   const [folderChildren, setFolderChildren] = useState(new Array<OdFolderChildren>)
-  const [isDeleteBtnShow, setIsDeleteBtnShow] = useState(false)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
+  const [uploadProgress,setUploadProgress] = useState<number>(0)
 
   const optionGroupProps = {
-    isOptionBtnShow,
+    isFolderPage,
     folderChildren,
     setFolderChildren,
+    uploadingFiles,
     setUploadingFiles,
     setSlideOpen,
-    setTotalUploadFileSize
+    uploadProgress,
+    setUploadProgress
   }
 
   const progressSlideProps = {
     uploadingFiles,
     slideOpen,
     setSlideOpen,
-    totalUploadFileSize
+    uploadProgress
   }
 
   const progressBtnProps = {
     uploadingFiles,
     slideOpen,
     setSlideOpen,
-    totalUploadFileSize
+    uploadProgress
   }
 
   const fileListProps = {
     folderChildren,
     setFolderChildren,
-    setIsOptionBtnShow,
+    setIsFolderPage,
     selected,
     setSelected
   }
@@ -68,7 +69,7 @@ export default function Home() {
       </Head>
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <ProgressSlide {...progressSlideProps} />
-
+        <OptionGroup {...optionGroupProps} />
         <Navbar />
 
 
@@ -77,13 +78,13 @@ export default function Home() {
           <nav className="mb-4 flex items-center justify-between pl-1">
 
             <Breadcrumb />
-            <DeleteBtn {...delBtnProps}/>
+            
             <div className='flex'>
-             
-              <OptionGroup {...optionGroupProps} />
+              <DeleteBtn {...delBtnProps}/>
+              
               <ProgressBtn {...progressBtnProps} />
 
-              <SwitchLayout />
+              <SwitchLayout isFolderPage/>
             </div>
           </nav>
           <FileListing {...fileListProps} />

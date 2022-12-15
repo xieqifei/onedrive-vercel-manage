@@ -57,6 +57,23 @@ export const uploadFile = async (
   let start = 0
   let percent = 0
   
+
+  //update percent in uploading files
+  const updatePercent = ()=>{
+          
+    //accordingto the usestate design,update percent,ui may not be updated
+    //here add a new viariable and copy uploading files.
+    //so usestate will believe this is a new state.
+    //and ui can be updated.
+    let uploadingTemp = [...uploadingFiles]
+    uploadingTemp.map((f,index)=>{
+      if(f.name === file.name){
+        uploadingTemp[index].percent = percent
+      }
+      setUploadingFiles(uploadingTemp)
+    })
+  }
+
   //do not use map or forEach. they will do all loop at same time,
   //but chunks must be uploaded in order.
   // waiting for the response from onedrive server is neccessary.
@@ -69,23 +86,6 @@ export const uploadFile = async (
       let chunks = sliceFile(file, pieceSize)
       try {
         let running = true
-
-        //update percent in uploading files
-        const updatePercent = ()=>{
-          
-          //accordingto the usestate design,update percent,ui may not be updated
-          //here add a new viariable and copy uploading files.
-          //so usestate will believe this is a new state.
-          //and ui can be updated.
-          let uploadingTemp = [...uploadingFiles]
-          uploadingTemp.map((f,index)=>{
-            if(f.name === file.name){
-              uploadingTemp[index].percent = percent
-            }
-            setUploadingFiles(uploadingTemp)
-          })
-        }
-
 
         while (running) {
           
@@ -137,6 +137,8 @@ export const uploadFile = async (
         }
       } catch (err) {
         axios.delete(uploadUrl)
+        percent = -1
+        updatePercent()
         reject(file.name+':upload failed, msg:'+err)
       }
 

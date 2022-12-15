@@ -149,14 +149,14 @@ export const Downloading: FC<{ title: string; style: string }> = ({ title, style
 const FileListing: FC<{
   folderChildren:Array<OdFolderChildren>,
   setFolderChildren:Dispatch<SetStateAction<Array<OdFolderChildren>>>,
-  setIsOptionBtnShow: Dispatch<SetStateAction<boolean>>,
+  setIsFolderPage: Dispatch<SetStateAction<boolean>>,
   query?: ParsedUrlQuery,
   selected:{ [key: string]: boolean },
   setSelected:Dispatch<SetStateAction<{ [key: string]: boolean }>>
 }> = ({
   folderChildren,
   setFolderChildren,
-  setIsOptionBtnShow,
+  setIsFolderPage,
   query,
   selected,
   setSelected
@@ -180,7 +180,7 @@ const FileListing: FC<{
       let isFolderInit=false
       let responses: any[] = data ? [].concat(...data) : []
       if (responses[0] && 'folder' in responses[0]) {
-        setIsOptionBtnShow(true)
+        setIsFolderPage(true)
         if(!isFolderInit){
           let folder = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
           setFolderChildren(folder)
@@ -188,7 +188,7 @@ const FileListing: FC<{
         }
         
       }else {
-        setIsOptionBtnShow(false)
+        setIsFolderPage(false)
       }
     },[data])
 
