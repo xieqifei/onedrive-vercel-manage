@@ -54,7 +54,7 @@ export default function ProgressSlide(
 
   return (
 
-    <Drawer title={t("Upload Progress")} width='60%' placement="right" onClose={onClose} open={slideOpen}>
+    <Drawer title={t("Upload Progress")} width='60%' placement="right" onClose={onClose} open={slideOpen} >
       <div className={uploadingFiles.length === 0 ? 'hidden ' : ''}>
           <div>
             <span> {

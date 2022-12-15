@@ -226,23 +226,10 @@ const FileListing: FC<{
     if ('folder' in responses[0] && folderChildren) {
       //if this page is folder,then option button group shows
 
-      // Expand list of API returns into flattened file data
-      // const folderChildren = [].concat(...responses.map(r => r.folder.value)) as OdFolderObject['value']
-      // uploadedFiles.map(
-      //   (f) => {
-      //     if ('folder' in f) {
-      //       folderChildren.unshift(f)
-      //     } else {
-      //       folderChildren.push(f)
-      //     }
-      //   }
-      // )
-      // exsitedFiles = folderChildren
-      // Find README.md file to render
       const readmeFile = folderChildren.find(c => c.name.toLowerCase() === 'readme.md')
 
       // Filtered file list helper
-      const getFiles = () => folderChildren.filter(c => !c.folder && c.name !== '.password')
+      const getFiles = () => folderChildren.filter(c =>  c.name !== '.password')
 
       // File selection
       const genTotalSelected = (selected: { [key: string]: boolean }) => {

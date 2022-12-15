@@ -12,6 +12,8 @@ import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { useTranslation } from 'next-i18next'
 import CreateFolderModal from './CreateFolderModal'
+import { FloatButton } from 'antd';
+import { CustomerServiceOutlined, CommentOutlined } from '@ant-design/icons';
 
 
 
@@ -134,15 +136,29 @@ const OptionGroup = ({
   ];
 
   return (
-    <Dropdown menu={{ items }} trigger={['click']} className={isOptionBtnShow ? "inline-block float-right mr-4" : "hidden "}>
-      <a onClick={(e) => e.preventDefault()}  >
-        <Space className='hidden sm:flex'>
-          <span className='inline'>{t('Add')}</span>
-          <DownOutlined className="inline float-right" />
-        </Space>
-        <PlusOutlined className='sm:hidden ' />
-      </a>
-    </Dropdown>
+    <>
+    <input type="file" ref={uploadInput} multiple className="hidden" onChange={handleFileEvent} />
+    <CreateFolderModal {...createFolderModalProps} />
+    <FloatButton.Group icon={<PlusOutlined className='inline-flex'/>} type="primary" trigger="click" className={isOptionBtnShow ? "inline-block float-right mr-4" : "hidden "}>
+      
+      <FloatButton tooltip={<div>{t('Create a folder')}</div>} icon={<FolderAddOutlined />} onClick={() => { setOpenCreateFolderModal(true) }}/>
+      <FloatButton tooltip={<div>{t('Upload files')}</div>} icon={<UploadOutlined />} onClick={() => {
+            uploadInput.current?.click()
+          }}/>
+      
+
+    </FloatButton.Group>
+    {/* <Dropdown menu={{ items }} trigger={['click']} className={isOptionBtnShow ? "inline-block float-right mr-4" : "hidden "}>
+        <a onClick={(e) => e.preventDefault()}  >
+          <Space className='hidden sm:flex'>
+            <span className='inline'>{t('Add')}</span>
+            <DownOutlined className="inline float-right" />
+          </Space>
+          <PlusOutlined className='sm:hidden ' />
+        </a>
+      </Dropdown> */}
+    </>
+    
 
   )
 }

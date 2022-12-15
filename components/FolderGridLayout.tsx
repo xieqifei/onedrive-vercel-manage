@@ -166,7 +166,7 @@ const FolderGridLayout = ({
                 selected[c.id] ? 'md:opacity-100' : 'md:opacity-0'
               } absolute top-0 left-0 z-10 m-1 rounded md:bg-white/50 py-0.5 group-hover:opacity-100 dark:bg-gray-900/50`}
             >
-              {!c.folder && !(c.name === '.password') && (
+              {!(c.name === '.password') && (
                 <Checkbox
                   checked={selected[c.id] ? 2 : 0}
                   onChange={() => toggleItemSelected(c.id)}

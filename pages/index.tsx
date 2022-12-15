@@ -12,6 +12,7 @@ import { UploadingFile, OdFolderChildren } from '../types'
 import OptionGroup from '../components/OptionGroup'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
+import DeleteBtn from '../components/DeleteBtn'
 
 export default function Home() {
 
@@ -31,6 +32,7 @@ export default function Home() {
     setSlideOpen,
     setTotalUploadFileSize
   }
+
   const progressSlideProps = {
     uploadingFiles,
     slideOpen,
@@ -52,6 +54,12 @@ export default function Home() {
     selected,
     setSelected
   }
+  const delBtnProps = {
+    folderChildren,
+    setFolderChildren,
+    selected
+  }
+
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
@@ -69,7 +77,9 @@ export default function Home() {
           <nav className="mb-4 flex items-center justify-between pl-1">
 
             <Breadcrumb />
+            <DeleteBtn {...delBtnProps}/>
             <div className='flex'>
+             
               <OptionGroup {...optionGroupProps} />
               <ProgressBtn {...progressBtnProps} />
 

@@ -8,22 +8,23 @@ import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
 import OptionGroup from '../components/OptionGroup'
-import {  useState } from 'react'
+import { useState } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
+import DeleteBtn from '../components/DeleteBtn'
 
 
 export default function Folders() {
   const { query } = useRouter()
 
-  const [uploadingFiles, setUploadingFiles ] = useState(new Array<UploadingFile>)
-  const [slideOpen, setSlideOpen ] = useState(false)
-  const [totalUploadFileSize,setTotalUploadFileSize] = useState(0)
-  const [isOptionBtnShow,setIsOptionBtnShow] = useState(true)
-  const [folderChildren,setFolderChildren] = useState<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
-  const [isDeleteBtnShow,setIsDeleteBtnShow] = useState(false)
-
+  const [uploadingFiles, setUploadingFiles] = useState(new Array<UploadingFile>)
+  const [slideOpen, setSlideOpen] = useState(false)
+  const [totalUploadFileSize, setTotalUploadFileSize] = useState(0)
+  const [isOptionBtnShow, setIsOptionBtnShow] = useState(true)
+  const [folderChildren, setFolderChildren] = useState<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
+  const [isDeleteBtnShow, setIsDeleteBtnShow] = useState(false)
+  const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
   const optionGroupProps = {
     isOptionBtnShow,
     folderChildren,
@@ -50,26 +51,35 @@ export default function Folders() {
     folderChildren,
     setFolderChildren,
     setIsOptionBtnShow,
-    query
+    query,
+    selected,
+    setSelected
+  }
+
+  const delBtnProps = {
+    folderChildren,
+    setFolderChildren,
+    selected
   }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>o
         <title>{siteConfig.title}</title>
       </Head>
-      
+
       <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
         <Navbar />
-        
+
         <ProgressSlide {...progressSlideProps} />
         <div className="mx-auto w-full max-w-5xl p-4">
           <nav className="mb-4 flex items-center justify-between space-x-3 pl-1">
             <Breadcrumb query={query} />
             <div className='flex'>
-            <OptionGroup {...optionGroupProps}/>
-            <ProgressBtn {...progressBtnProps}/>
-            
-            <SwitchLayout />
+              <DeleteBtn {...delBtnProps}/>
+              <OptionGroup {...optionGroupProps} />
+              <ProgressBtn {...progressBtnProps} />
+
+              <SwitchLayout />
             </div>
           </nav>
           <FileListing {...fileListProps} />

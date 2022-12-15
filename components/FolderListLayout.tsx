@@ -159,7 +159,7 @@ const FolderListLayout = ({
             </div>
           )}
           <div className=" p-1.5 text-gray-700 dark:text-gray-400 md:flex">
-            {!c.folder && !(c.name === '.password') && (
+            { !(c.name === '.password') && (
               <Checkbox
                 checked={selected[c.id] ? 2 : 0}
                 onChange={() => toggleItemSelected(c.id)}
