@@ -1,7 +1,8 @@
 import { Dispatch, Fragment, SetStateAction } from 'react'
 import { UploadingFile } from '../types'
-import { Progress , Result, Drawer } from 'antd';
+import { Progress, Result, Drawer, List, Avatar, Button } from 'antd';
 import { useTranslation } from 'next-i18next';
+import {PauseOutlined,DeleteOutlined} from '@ant-design/icons';
 
 export default function ProgressSlide(
   {
@@ -16,7 +17,7 @@ export default function ProgressSlide(
     uploadProgress: number
   }
 ) {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
 
 
@@ -48,26 +49,34 @@ export default function ProgressSlide(
 
     <Drawer title={t("Upload Progress")} width='60%' placement="right" onClose={onClose} open={slideOpen} >
       <div className={uploadingFiles.length === 0 ? 'hidden ' : ''}>
-          <div>
-            <span> {
-              t('Uploading: {{number}} file(s)',{number:uploadingFiles.length})
-            } </span>
-            <Progress percent={uploadProgress} size="small" />
-          </div>
+        <div>
+          <span> {
+            t('Uploading: {{number}} file(s)', { number: uploadingFiles.length })
+          } </span>
+          <Progress percent={uploadProgress} size="small" />
+        </div>
 
-          {/* uploading file list */}
-          <div className={"flow-root"}>
-            <ul role="list" className="divide-y-1 divide-gray-200 dark:divide-gray-700">
-              {ListItems}
-            </ul>
-          </div>
-        </div>
-        <div className={uploadingFiles.length > 0 ? 'hidden' : 'inline'}>
-          <Result
-            status="success"
-            title={t('Successfully Upload All Files!')}
-          />
-        </div>
+        {/* uploading file list */}
+        <List
+          itemLayout="horizontal"
+          dataSource={uploadingFiles}
+          renderItem={(item) => (
+            <List.Item actions={[<Button className="m-0 p-0" shape="circle" size='small' icon={<PauseOutlined />} type="text"></Button>, <Button className="m-0 p-0" shape="circle" size='small' icon={<DeleteOutlined /> } type="text" danger></Button>]}>
+             
+              <div><span className="">{item.name}</span></div>
+              <div>{t('File size')+':'+ item.sizeStr}</div>
+               <div className='m-0 '>{item.percent}%</div>
+            </List.Item>
+          )}
+        />
+        
+      </div>
+      <div className={uploadingFiles.length > 0 ? 'hidden' : 'inline'}>
+        <Result
+          status="success"
+          title={t('Successfully Upload All Files!')}
+        />
+      </div>
     </Drawer>
 
 
