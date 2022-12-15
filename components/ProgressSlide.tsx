@@ -2,16 +2,20 @@ import { Dispatch, Fragment, SetStateAction } from 'react'
 import { UploadingFile } from '../types'
 import { Progress, Result, Drawer, List, Avatar, Button } from 'antd';
 import { useTranslation } from 'next-i18next';
-import {PauseOutlined,DeleteOutlined} from '@ant-design/icons';
+import { RedoOutlined, PauseOutlined, DeleteOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { reuploadFile } from '../utils/uploadFile';
+import axios from 'axios';
 
 export default function ProgressSlide(
   {
     uploadingFiles,
+    setUploadingFiles,
     slideOpen,
     setSlideOpen,
     uploadProgress
   }: {
     uploadingFiles: Array<UploadingFile>
+    setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
     slideOpen: boolean
     setSlideOpen: Dispatch<SetStateAction<boolean>>
     uploadProgress: number
@@ -19,31 +23,35 @@ export default function ProgressSlide(
 ) {
   const { t } = useTranslation()
 
+  const pauseUpload = (item: UploadingFile) => {
+    let uploadingFilesTemp = [...uploadingFiles]
+    uploadingFilesTemp.map((f, index) => {
+      if (f.name === item.name) {
+        uploadingFilesTemp[index].status = 'paused'
+      }
+    })
+    setUploadingFiles(uploadingFilesTemp)
+  }
 
+  const removeUpload = (item: UploadingFile) => {
+    let uploadingFilesTemp = [...uploadingFiles]
+    uploadingFilesTemp.map((f, index) => {
+      if (f.name === item.name) {
+        uploadingFilesTemp.splice(index, 1)
+        axios.delete(f.session)
+      }
+    })
+    setUploadingFiles(uploadingFilesTemp)
+  }
+
+  const reupload = (item: UploadingFile) => {
+    reuploadFile(item, uploadingFiles, setUploadingFiles)
+  }
 
   const onClose = () => {
     setSlideOpen(false);
   };
 
-  const ListItems = uploadingFiles.map((file: UploadingFile) => {
-    return (
-      <li className="pt-3 pb-0 sm:pt-4" key={file.name}>
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-              {file.name}
-            </p>
-            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-              {t('File size')}: {file.sizeStr}
-            </p>
-          </div>
-          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-            {file.percent}%
-          </div>
-        </div>
-      </li>
-    )
-  })
 
   return (
 
@@ -58,18 +66,32 @@ export default function ProgressSlide(
 
         {/* uploading file list */}
         <List
+          size='small'
           itemLayout="horizontal"
           dataSource={uploadingFiles}
           renderItem={(item) => (
-            <List.Item actions={[<Button className="m-0 p-0" shape="circle" size='small' icon={<PauseOutlined />} type="text"></Button>, <Button className="m-0 p-0" shape="circle" size='small' icon={<DeleteOutlined /> } type="text" danger></Button>]}>
-             
-              <div><span className="">{item.name}</span></div>
-              <div>{t('File size')+':'+ item.sizeStr}</div>
-               <div className='m-0 '>{item.percent}%</div>
+            <List.Item style={{ padding: 0 }}>
+              <div className='w-full '>
+                <div className='w-4/5'>
+                  <h4 className="truncate font-bold">{item.name}</h4>
+                  <div className="inline-flex">
+                    <div className='hidden sm:flex mr-5 '>{t('File size') + ':' + item.sizeStr}</div>
+                    <div className={item.status === 'error' ? 'hidden' : ''}>{item.percent}%</div>
+                    <div className={item.status === 'error' ? 'text-red-500' : 'hidden'}>Error</div>
+                  </div>
+                </div>
+                <div className='mr-0'>
+
+                  <Button onClick={() => { reupload(item) }} className={item.status !== 'uploading' ? '' : 'hidden'} shape="circle" size='small' icon={item.status === 'error' ? <RedoOutlined /> : <PlayCircleOutlined />} type="text"></Button>
+                  <Button onClick={() => { pauseUpload(item) }} className={item.status === 'uploading' ? '' : 'hidden'} shape="circle" size='small' icon={<PauseOutlined />} type="text"></Button>
+                  <Button onClick={() => { removeUpload(item) }} shape="circle" size='small' icon={<DeleteOutlined />} type="text" danger></Button>
+                </div>
+              </div>
+
             </List.Item>
           )}
         />
-        
+
       </div>
       <div className={uploadingFiles.length > 0 ? 'hidden' : 'inline'}>
         <Result

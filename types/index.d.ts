@@ -71,9 +71,11 @@ export type OdDriveItem = {
   parentReference: { driveId: string; driveType: string; id: string; path: string }
 }
 
+//for status, 0 is idle,1 is uploading, 2 is paused,3 is error,4 is removed
 export type UploadingFile = {
-  name:string,
-  sizeStr:string,
-  percent:number,
-  size:number
+  name: string,
+  sizeStr: string,
+  percent: number,
+  size: number,
+  status: 0 | 1 | 2 | 3 | 4
 }

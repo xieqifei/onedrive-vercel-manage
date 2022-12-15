@@ -94,7 +94,9 @@ const OptionGroup = ({
           name: file.name,
           percent: 0,
           sizeStr: formatBytes(file.size),
-          size: file.size
+          size: file.size,
+          status: 'uploading',
+          session:'' 
         })
       }
 

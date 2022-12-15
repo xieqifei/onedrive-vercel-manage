@@ -20,7 +20,6 @@ export default function Folders() {
 
   const [uploadingFiles, setUploadingFiles] = useState(new Array<UploadingFile>)
   const [slideOpen, setSlideOpen] = useState(false)
-  const [totalUploadFileSize, setTotalUploadFileSize] = useState(0)
   const [isFolderPage, setIsFolderPage] = useState(true)
   const [folderChildren, setFolderChildren] = useState<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
@@ -39,6 +38,7 @@ export default function Folders() {
   }
   const progressSlideProps = {
     uploadingFiles,
+    setUploadingFiles,
     slideOpen,
     setSlideOpen,
     uploadProgress

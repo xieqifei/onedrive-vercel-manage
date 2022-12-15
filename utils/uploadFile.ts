@@ -8,6 +8,7 @@ const getUploadSession = async (filename: string, parentPath: string, odpt: stri
   const res = await axios.get(`/api/upload/?path=${parentPath}&filename=${filename}${odpt ? `&odpt=${odpt}` : ''}`)
   if (res.status === 200) {
     const { uploadUrl } = res.data
+    
     return uploadUrl
   } else {
     console.warn(res.data)
@@ -43,6 +44,165 @@ const sliceFile = (file:File, pieceSize = 5 * 256 * 256 * 30) => {
   return chunks
 }
 
+const pausedFiles = new Array<File>
+const push2PausedFiles = (file:File)=>{
+  let isSameFile= pausedFiles.some((f)=>{
+    if(f.name===file.name){
+      return true
+    }
+  })
+  if(!isSameFile){
+    pausedFiles.push(file)
+  }
+}
+
+//delete uploading file
+const deleteUploadedFile()=>{
+
+}
+
+//breakpoint retransmission
+export const reuploadFile =async (
+  readyFile:UploadingFile,
+  uploadingFiles:Array<UploadingFile>,
+  setUploadingFiles:Dispatch<SetStateAction<Array<UploadingFile>>>,) => {
+  //get start byte number
+  const uploadUrl = readyFile.session
+  const rep = await axios.get(uploadUrl)
+  const setStatus = (status:'done' | 'uploading' | 'paused' | 'error' | 'removed')=>{
+    let uploadingFilesTemp = [...uploadingFiles]
+    uploadingFilesTemp.map((f,index)=>{
+      if(f.name===readyFile.name){
+        uploadingFilesTemp[index].status = status
+      }
+    })
+    setUploadingFiles(uploadingFilesTemp)
+  }
+  if(rep.status !== 200){
+    console.log('do not get start byte')
+    //if dont get start byte number set status error and end upload
+    setStatus('error')
+    return 
+  }
+
+  const file = pausedFiles.find(f =>f.name === readyFile.name)
+  if(!file){
+    console.log('file not found')
+    console.log(pausedFiles)
+    setStatus('error')
+    return 
+  }
+
+  //set status to 'uploading'
+  setStatus('uploading')
+  pausedFiles.splice(pausedFiles.indexOf(file),1)
+  let {nextExpectedRanges} = rep.data
+  let pieceSize = 5 * 256 * 256 * 10
+  let start = parseInt(nextExpectedRanges[0].split('-')[0])
+  let percent = 0
+  //use to control the loop
+  let isUploadDone = false
+
+  //update percent in uploading files
+  const updateUploadingFiles = (percent:number,status?:'done' | 'uploading' | 'paused' | 'error' | 'removed')=>{
+        //accordingto the usestate design,update percent,ui may not be updated
+    //here add a new viariable and copy uploading files.
+    //so usestate will believe this is a new state.
+    //and ui can be updated.
+    let uploadingTemp = [...uploadingFiles]
+    uploadingTemp.map((f,index)=>{
+      if(f.name === file.name){
+        uploadingTemp[index].percent = percent
+        if(status){
+          uploadingTemp[index].status = status
+        }
+      }
+      setUploadingFiles(uploadingTemp)
+    })
+  }
+
+
+  const getFileStatus=()=>{
+    let statusTemp: 'done' | 'uploading' | 'paused' | 'error' | 'removed' = 'error'
+    if(!isUploadDone){
+      uploadingFiles.map(f=>{
+        if(f.name === file.name){
+          //if status is paused or error, store file into pausedFiles
+          if(f.status === 'paused' || f.status==='error'){
+            push2PausedFiles(file)
+          }
+          statusTemp = f.status
+        }
+      })
+      return statusTemp
+    }else{
+      return 'error'
+    }
+  }
+
+  return new Promise((resolve,reject)=>{
+    let run =async () => {
+      try {
+        let chunks = sliceFile(file, pieceSize)
+        while (getFileStatus() === 'uploading')  {
+          
+          let chunk = chunks[start / pieceSize]
+          let reqConfig = {
+            headers: {
+              // 'Content-Length': file.size,
+              'Content-Range': `bytes ${chunk['start']}-${chunk['end']}/${file.size}`
+            }
+          }
+          //DO NOT use access token here.
+          let res = await axios.put(uploadUrl, chunk['blob'], reqConfig)
+          // res.status is 202, last chunk upload success
+          //get next range and redict
+          if (res.status === 202) {
+            let { nextExpectedRanges } = res.data
+            // "nextExpectedRanges": [
+            //   "12345-55232",
+            //   "77829-99375"
+            //   ]
+            start = parseInt(nextExpectedRanges[0].split('-')[0])
+    
+            percent = Math.round(start/file.size*100)
+            
+            updateUploadingFiles(percent)
+            isUploadDone = false
+          }
+          //all upload done
+          else if (res.status === 201) {
+            percent = 100
+            updateUploadingFiles(percent,'done')
+            resolve(res.data)
+            isUploadDone = true
+          }
+          //file conflict
+          else if (res.status === 409) {
+            //if error, upload url need to be delete from onedrive server
+            axios.delete(uploadUrl)
+            push2PausedFiles(file)
+            percent = -1
+            updateUploadingFiles(percent,'error')
+            isUploadDone = true
+            reject(file.name+': file name conflict. You upload two file with same name')
+          }
+          
+        }
+      } catch (err) {
+        axios.delete(uploadUrl)
+        percent = -1
+        push2PausedFiles(file)
+        updateUploadingFiles(percent,'error')
+        reject(file.name+':upload failed, msg:'+err)
+      }
+    }
+    run()
+  })
+  
+
+   
+}
 
 //upload file via upload url to onedrive
 export const uploadFile = async (
@@ -53,14 +213,31 @@ export const uploadFile = async (
   setUploadingFiles:Dispatch<SetStateAction<Array<UploadingFile>>>,) => {
   //get upload session
   let uploadUrl = await getUploadSession(file.name,parentPath,odpt)
+  //store session url in uploadingFiles
+  let uploadingFilesTemp = [...uploadingFiles]
+  uploadingFilesTemp.map((f,index)=>{
+    if(f.name===file.name){
+      uploadingFilesTemp[index].session = uploadUrl
+    }
+  })
+  setUploadingFiles(uploadingFilesTemp)
+
   let pieceSize = 5 * 256 * 256 * 10
   let start = 0
   let percent = 0
+  //use to control the loop
+  let isUploadDone = false
   
 
   //update percent in uploading files
-  const updatePercent = ()=>{
-          
+  const updateUploadingFiles = (percent:number,status?:'done' | 'uploading' | 'paused' | 'error' | 'removed')=>{
+    //if removed, delete upload session
+    if(status==='removed'){
+      axios.delete(uploadUrl)
+    }
+    else if(status==='paused'||status==='error'){
+      push2PausedFiles(file)
+    }
     //accordingto the usestate design,update percent,ui may not be updated
     //here add a new viariable and copy uploading files.
     //so usestate will believe this is a new state.
@@ -69,9 +246,30 @@ export const uploadFile = async (
     uploadingTemp.map((f,index)=>{
       if(f.name === file.name){
         uploadingTemp[index].percent = percent
+        if(status){
+          uploadingTemp[index].status = status
+        }
       }
       setUploadingFiles(uploadingTemp)
     })
+  }
+
+  const getFileStatus=()=>{
+    let statusTemp: 'done' | 'uploading' | 'paused' | 'error' | 'removed' = 'error'
+    if(!isUploadDone){
+      uploadingFiles.map(f=>{
+        if(f.name === file.name){
+          //if status is paused or error, store file into pausedFiles
+          if(f.status === 'paused' || f.status==='error'){
+            push2PausedFiles(file)
+          }
+          statusTemp = f.status
+        }
+      })
+      return statusTemp
+    }else{
+      return 'error'
+    }
   }
 
   //do not use map or forEach. they will do all loop at same time,
@@ -85,9 +283,8 @@ export const uploadFile = async (
       }
       let chunks = sliceFile(file, pieceSize)
       try {
-        let running = true
 
-        while (running) {
+        while (getFileStatus() === 'uploading')  {
           
           let chunk = chunks[start / pieceSize]
           let reqConfig = {
@@ -110,35 +307,31 @@ export const uploadFile = async (
 
             percent = Math.round(start/file.size*100)
             
-            updatePercent()
-            
+            updateUploadingFiles(percent)
+            isUploadDone = false
           }
           //all upload done
           else if (res.status === 201) {
             percent = 100
-            updatePercent()
+            updateUploadingFiles(percent,'done')
             resolve(res.data)
-            running = false
-            
+            isUploadDone = true
           }
           //file conflict
           else if (res.status === 409) {
             //if error, upload url need to be delete from onedrive server
             axios.delete(uploadUrl)
             percent = -1
-            updatePercent()
-            
+            updateUploadingFiles(percent,'error')
+            isUploadDone = true
             reject(file.name+': file name conflict. You upload two file with same name')
-            running = false
-            
           }
-
           
         }
       } catch (err) {
         axios.delete(uploadUrl)
         percent = -1
-        updatePercent()
+        updateUploadingFiles(percent,'error')
         reject(file.name+':upload failed, msg:'+err)
       }
 
