@@ -57,7 +57,7 @@ const OptionGroup = ({
     })
     if (isAllFilesRemovedOrDone) {
       let nullList = new Array<UploadingFile>
-      setUploadingFiles(nullList)
+      // setUploadingFiles(nullList)
     } else {
       if (uploadingFiles) {
         uploadingFiles.map((uploadingfile) => {

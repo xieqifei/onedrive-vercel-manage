@@ -16,10 +16,10 @@ const getUploadSession = async (filename: string, parentPath: string, odpt: stri
   }
 }
 
-const getFileStatus = (isUploadDone:boolean,uploadingFiles:Array<UploadingFile>,file:File) => {
+const getFileStatus = (isUploadDone:boolean,uploadingFilesContainer:Array<UploadingFile>,file:File) => {
   let statusTemp: 'done' | 'uploading' | 'paused' | 'error' | 'removed' = 'error'
   if (!isUploadDone) {
-    uploadingFiles.map(f => {
+    uploadingFilesContainer.map(f => {
       if (f.name === file.name) {
         //if status is paused or error, store file into pausedFiles
         if (f.status === 'paused' || f.status === 'error') {
@@ -37,14 +37,15 @@ const getFileStatus = (isUploadDone:boolean,uploadingFiles:Array<UploadingFile>,
 //delete uploadingFile
 const removeUploadingFile = (
   filename: string,
-  uploadingFiles: Array<UploadingFile>,
+  uploadingFilesContainer: Array<UploadingFile>,
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>) => {
-  let uploadingFilesTemp = [...uploadingFiles]
-  uploadingFilesTemp.map((f, index) => {
+  
+  uploadingFilesContainer.map((f, index) => {
     if (f.name === filename) {
-      uploadingFilesTemp.splice(index, 1)
+      uploadingFilesContainer.splice(index, 1)
     }
   })
+  let uploadingFilesTemp = [...uploadingFilesContainer]
   setUploadingFiles(uploadingFilesTemp)
 }
 
@@ -100,7 +101,7 @@ const push2PausedFiles = (file: File) => {
 //update percent in uploading files
 const updateUploadingFiles = (
   percent: number, 
-  uploadingFiles:Array<UploadingFile>,
+  uploadingFilesContainer:Array<UploadingFile>,
   setUploadingFiles:Dispatch<SetStateAction<Array<UploadingFile>>>,
   file:File,
   status?: 'done' | 'uploading' | 'paused' | 'error' | 'removed',
@@ -110,14 +111,15 @@ const updateUploadingFiles = (
   //here add a new viariable and copy uploading files.
   //so usestate will believe this is a new state.
   //and ui can be updated.
-  let uploadingTemp = [...uploadingFiles]
-  uploadingTemp.map((f, index) => {
+ 
+  uploadingFilesContainer.map((f, index) => {
     if (f.name === file.name) {
-      uploadingTemp[index].percent = percent
+      uploadingFilesContainer[index].percent = percent
       if (status) {
-        uploadingTemp[index].status = status
+        uploadingFilesContainer[index].status = status
       }
     }
+    let uploadingTemp = [...uploadingFilesContainer]
     setUploadingFiles(uploadingTemp)
   })
 }
@@ -127,7 +129,7 @@ const updateUploadingFiles = (
 //breakpoint retransmission
 export const reuploadFile = async (
   readyFile: UploadingFile,
-  uploadingFiles: Array<UploadingFile>,
+  uploadingFilesContainer: Array<UploadingFile>,
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>,
   folderChildren: Array<OdFolderChildren>,
   setFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>) => {
@@ -135,12 +137,13 @@ export const reuploadFile = async (
   const uploadUrl = readyFile.session
   const rep = await axios.get(uploadUrl)
   const setStatus = (status: 'done' | 'uploading' | 'paused' | 'error' | 'removed') => {
-    let uploadingFilesTemp = [...uploadingFiles]
-    uploadingFilesTemp.map((f, index) => {
+    
+    uploadingFilesContainer.map((f, index) => {
       if (f.name === readyFile.name) {
-        uploadingFilesTemp[index].status = status
+        uploadingFilesContainer[index].status = status
       }
     })
+    let uploadingFilesTemp = [...uploadingFilesContainer]
     setUploadingFiles(uploadingFilesTemp)
   }
   if (rep.status !== 200) {
@@ -171,7 +174,7 @@ export const reuploadFile = async (
   const updateUploadingFilesT = (
     percent:number, 
     status?: 'done' | 'uploading' | 'paused' | 'error' | 'removed',)=>{
-      updateUploadingFiles(percent,uploadingFiles,setUploadingFiles,file,status)
+      updateUploadingFiles(percent,uploadingFilesContainer,setUploadingFiles,file,status)
     }
 
  
@@ -180,7 +183,7 @@ export const reuploadFile = async (
     let run = async () => {
       try {
         let chunks = sliceFile(file, pieceSize)
-        while (getFileStatus(isUploadDone,uploadingFiles,file) === 'uploading') {
+        while (getFileStatus(isUploadDone,uploadingFilesContainer,file) === 'uploading') {
 
           let chunk = chunks[start / pieceSize]
           let reqConfig = {
@@ -208,7 +211,7 @@ export const reuploadFile = async (
           else if (res.status === 201) {
             percent = 100
             updateUploadingFilesT(percent, 'done')
-            removeUploadingFile(file.name, uploadingFiles, setUploadingFiles)
+            removeUploadingFile(file.name, uploadingFilesContainer, setUploadingFiles)
             add2FolderChildren(res.data, folderChildren, setFolderChildren)
             resolve(res.data)
             isUploadDone = true
@@ -245,7 +248,7 @@ export const uploadFile = async (
   file: File,
   parentPath: string,
   odpt: string | null,
-  uploadingFiles: Array<UploadingFile>,
+  uploadingFilesContainer: Array<UploadingFile>,
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>,
   folderChildren: Array<OdFolderChildren>,
   setFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>
@@ -253,12 +256,13 @@ export const uploadFile = async (
   //get upload session
   let uploadUrl = await getUploadSession(file.name, parentPath, odpt)
   //store session url in uploadingFiles
-  let uploadingFilesTemp = [...uploadingFiles]
-  uploadingFilesTemp.map((f, index) => {
+  
+  uploadingFilesContainer.map((f, index) => {
     if (f.name === file.name) {
-      uploadingFilesTemp[index].session = uploadUrl
+      uploadingFilesContainer[index].session = uploadUrl
     }
   })
+  let uploadingFilesTemp = [...uploadingFilesContainer]
   setUploadingFiles(uploadingFilesTemp)
 
   let pieceSize = 5 * 256 * 256 * 10
@@ -271,7 +275,7 @@ export const uploadFile = async (
   const updateUploadingFilesT = (
     percent:number, 
     status?: 'done' | 'uploading' | 'paused' | 'error' | 'removed',)=>{
-      updateUploadingFiles(percent,uploadingFiles,setUploadingFiles,file,status)
+      updateUploadingFiles(percent,uploadingFilesContainer,setUploadingFiles,file,status)
     }
 
 
@@ -287,7 +291,7 @@ export const uploadFile = async (
       let chunks = sliceFile(file, pieceSize)
       try {
 
-        while (getFileStatus(isUploadDone,uploadingFiles,file)  === 'uploading') {
+        while (getFileStatus(isUploadDone,uploadingFilesContainer,file)  === 'uploading') {
 
           let chunk = chunks[start / pieceSize]
           let reqConfig = {
@@ -317,7 +321,7 @@ export const uploadFile = async (
           else if (res.status === 201) {
             percent = 100
             updateUploadingFilesT(percent, 'done')
-            removeUploadingFile(file.name, uploadingFiles, setUploadingFiles)
+            removeUploadingFile(file.name, uploadingFilesContainer, setUploadingFiles)
             add2FolderChildren(res.data, folderChildren, setFolderChildren)
             resolve(res.data)
             isUploadDone = true
@@ -354,7 +358,7 @@ export const restrictedUpload = (
   parentPath: string,
   odpt: string | null,
   limtReq: LimitPromise,
-  uploadingFiles: Array<UploadingFile>,
+  uploadingFilesContainer: Array<UploadingFile>,
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>,
   folderChildren: Array<OdFolderChildren>,
   setFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
@@ -366,7 +370,7 @@ export const restrictedUpload = (
       file,
       parentPath,
       odpt,
-      uploadingFiles,
+      uploadingFilesContainer,
       setUploadingFiles,
       folderChildren,
       setFolderChildren))
