@@ -77,5 +77,6 @@ export type UploadingFile = {
   sizeStr: string,
   percent: number,
   size: number,
-  status: 0 | 1 | 2 | 3 | 4
+  status: 'done' | 'uploading' | 'paused' | 'error' | 'removed',
+  session:string
 }

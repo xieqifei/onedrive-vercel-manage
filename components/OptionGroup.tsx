@@ -30,98 +30,93 @@ const OptionGroup = ({
   isFolderPage: boolean
   folderChildren: Array<OdFolderChildren>
   setFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>
-  uploadingFiles:Array<UploadingFile>
+  uploadingFiles: Array<UploadingFile>
   setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
   setSlideOpen: Dispatch<SetStateAction<boolean>>,
-  uploadProgress:number
+  uploadProgress: number
   setUploadProgress: Dispatch<SetStateAction<number>>
 }) => {
   const [openCreateFolderModal, setOpenCreateFolderModal] = useState(false);
   const { asPath } = useRouter()
   const uploadInput = useRef<HTMLInputElement>(null)
   const hashedToken = getStoredToken(asPath)
-  const totFileSize = useRef<number>(0)
-
   //limit the maximal number of uploading files to 6
   const limtReq = new LimitPromise(6);
 
   const { t } = useTranslation()
 
-  useEffect(() =>{
+  //calculate the total precentage of upload progress
+  useEffect(() => {
     let waitingSize = 0
-    if(uploadingFiles){
-      uploadingFiles.map((uploadingfile)=>{
-        //-1 means file upload error
-        if(uploadingfile.percent!==-1){
-          waitingSize = (100-uploadingfile.percent)/100*uploadingfile.size + waitingSize
-        }
-        //if upload failed, delete it from uploading
-        if(uploadingfile.percent===-1){
-          totFileSize.current = totFileSize.current - uploadingfile.size
-        }
-      })
-      let totalPercent = Math.round((totFileSize.current-waitingSize)/totFileSize.current*100)
-      setUploadProgress(totalPercent)
+    let totalSize = 0
+    //if all files in uploadingFiles are removed or done, then clear uploadingFiles
+    let isAllFilesRemovedOrDone = uploadingFiles.every((f) => {
+      if (f.status === 'done' || f.status === 'removed') {
+        return true
+      }
+    })
+    if (isAllFilesRemovedOrDone) {
+      let nullList = new Array<UploadingFile>
+      setUploadingFiles(nullList)
+    } else {
+      if (uploadingFiles) {
+        uploadingFiles.map((uploadingfile) => {
+          //-1 means file upload error
+          if (uploadingfile.status !== 'removed') {
+            waitingSize = (100 - uploadingfile.percent) / 100 * uploadingfile.size + waitingSize
+            totalSize = uploadingfile.size + totalSize
+          }
+        })
+        let totalPercent = Math.round((totalSize - waitingSize) / totalSize * 100)
+        setUploadProgress(totalPercent)
+      }
     }
-    
-  },[uploadingFiles])
 
- 
+  }, [uploadingFiles])
+
+
   //upload file to onedrive
   const handleUploadFiles = (files: Array<File>) => {
-    //calculate total uploaded files size
-    if (uploadProgress===100){
-      totFileSize.current = 0
-    }
-    files.map(
-      (f) => {
-        totFileSize.current = f.size + totFileSize.current
-      }
-    )
+   
     let uploading = [...uploadingFiles]
-    files.map((file: File,index:number) => {
-      let isSameFileExisted = uploadingFiles.some((uploadingfile)=>{
-        if(uploadingfile.name===file.name){
+    files.map((file: File, index: number) => {
+      let isSameFileExisted = uploadingFiles.some((uploadingfile) => {
+        if (uploadingfile.name === file.name) {
           return true
-        }else{
+        } else {
           return false
         }
       })
-      if(isSameFileExisted){
-        files.splice(index,1)
-      }else{
+      if (isSameFileExisted) {
+        files.splice(index, 1)
+      } else {
         uploading.push({
           name: file.name,
           percent: 0,
           sizeStr: formatBytes(file.size),
           size: file.size,
           status: 'uploading',
-          session:'' 
+          session: ''
         })
       }
-
-      
     })
     setUploadingFiles(uploading)
     setSlideOpen(true)
-    const uploaded: Array<OdFolderChildren> = [];
     files.map(async (file: File) => {
-      restrictedUpload(file, asPath, hashedToken, limtReq, uploading, setUploadingFiles).then((data) => {
+      restrictedUpload(
+        file,
+        asPath,
+        hashedToken,
+        limtReq,
+        uploading,
+        setUploadingFiles,
+        folderChildren,
+        setFolderChildren).then((data) => {
 
-        uploaded.push(data as unknown as OdFolderChildren)
-        //remove uploaded files from uploading list
-        uploading.map((f, index) => {
-          if (f.name === file.name) {
-            uploading.splice(index, 1);
-          }
+          console.log('upload success')
+        }).catch((err) => {
+          console.log(err)
         })
-        let uploadingTemp = [...uploading]
-        setUploadingFiles(uploadingTemp);
-        let folder = [...folderChildren]
-        setFolderChildren(folder.concat(uploaded))
-      }).catch((err) => {
-        console.log(err)
-      })
     })
   }
 
