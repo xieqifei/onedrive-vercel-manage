@@ -3,8 +3,8 @@ import { OdFolderChildren, UploadingFile } from '../types'
 import { Progress, Result, Drawer, List, Avatar, Button } from 'antd';
 import { useTranslation } from 'next-i18next';
 import { RedoOutlined, PauseOutlined, DeleteOutlined, PlayCircleOutlined } from '@ant-design/icons';
-import { reuploadFile } from '../utils/uploadFile';
-import axios from 'axios';
+import { pauseUpload, removeUpload, reuploadFile } from '../utils/uploadFile';
+
 
 export default function ProgressSlide(
   {
@@ -27,30 +27,16 @@ export default function ProgressSlide(
 ) {
   const { t } = useTranslation()
 
-  const pauseUpload = (item: UploadingFile) => {
-    let uploadingFilesTemp = [...uploadingFiles]
-    uploadingFilesTemp.map((f, index) => {
-      if (f.name === item.name) {
-        uploadingFilesTemp[index].status = 'paused'
-      }
-    })
-    setUploadingFiles(uploadingFilesTemp)
+  const pauseUploadHandle = (item: UploadingFile) => {
+    pauseUpload(item,setUploadingFiles)
   }
 
-  const removeUpload = (item: UploadingFile) => {
-    let uploadingFilesTemp = [...uploadingFiles]
-    uploadingFilesTemp.map((f, index) => {
-      if (f.name === item.name) {
-        // uploadingFilesTemp.splice(index, 1)
-        uploadingFilesTemp[index].status = 'removed'
-        axios.delete(f.session)
-      }
-    })
-    setUploadingFiles(uploadingFilesTemp)
+  const removeUploadHandle = (item: UploadingFile) => {
+    removeUpload(item,setUploadingFiles)
   }
 
   const reupload = (item: UploadingFile) => {
-    reuploadFile(item, uploadingFiles, setUploadingFiles,folderChildren,setFolderChildren)
+    reuploadFile(item, setUploadingFiles,folderChildren,setFolderChildren)
   }
 
   const onClose = () => {
@@ -88,8 +74,8 @@ export default function ProgressSlide(
                 <div className='mr-0'>
 
                   <Button onClick={() => { reupload(item) }} className={item.status !== 'uploading' ? '' : 'hidden'} shape="circle" size='small' icon={item.status === 'error' ? <RedoOutlined /> : <PlayCircleOutlined />} type="text"></Button>
-                  <Button onClick={() => { pauseUpload(item) }} className={item.status === 'uploading' ? '' : 'hidden'} shape="circle" size='small' icon={<PauseOutlined />} type="text"></Button>
-                  <Button onClick={() => { removeUpload(item) }} shape="circle" size='small' icon={<DeleteOutlined />} type="text" danger></Button>
+                  <Button onClick={() => { pauseUploadHandle(item) }} className={item.status === 'uploading' ? '' : 'hidden'} shape="circle" size='small' icon={<PauseOutlined />} type="text"></Button>
+                  <Button onClick={() => { removeUploadHandle(item) }} shape="circle" size='small' icon={<DeleteOutlined />} type="text" danger></Button>
                 </div>
               </div>
 

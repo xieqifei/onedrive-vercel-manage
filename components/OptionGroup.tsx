@@ -46,39 +46,39 @@ const OptionGroup = ({
   const { t } = useTranslation()
 
   //calculate the total precentage of upload progress
-  useEffect(() => {
-    let waitingSize = 0
-    let totalSize = 0
-    //if all files in uploadingFiles are removed or done, then clear uploadingFiles
-    let isAllFilesRemovedOrDone = uploadingFiles.every((f) => {
-      if (f.status === 'done' || f.status === 'removed') {
-        return true
-      }
-    })
-    if (isAllFilesRemovedOrDone) {
-      let nullList = new Array<UploadingFile>
-      // setUploadingFiles(nullList)
-    } else {
-      if (uploadingFiles) {
-        uploadingFiles.map((uploadingfile) => {
-          //-1 means file upload error
-          if (uploadingfile.status !== 'removed') {
-            waitingSize = (100 - uploadingfile.percent) / 100 * uploadingfile.size + waitingSize
-            totalSize = uploadingfile.size + totalSize
-          }
-        })
-        let totalPercent = Math.round((totalSize - waitingSize) / totalSize * 100)
-        setUploadProgress(totalPercent)
-      }
-    }
+  // useEffect(() => {
+    // let waitingSize = 0
+    // let totalSize = 0
+    // //if all files in uploadingFiles are removed or done, then clear uploadingFiles
+    // let isAllFilesRemovedOrDone = uploadingFiles.every((f) => {
+    //   if (f.status === 'done' || f.status === 'removed') {
+    //     return true
+    //   }
+    // })
+    // if (isAllFilesRemovedOrDone) {
+    //   let nullList = new Array<UploadingFile>
+    //   // setUploadingFiles(nullList)
+    // } else {
+    //   if (uploadingFiles) {
+    //     uploadingFiles.map((uploadingfile) => {
+    //       //-1 means file upload error
+    //       if (uploadingfile.status !== 'removed') {
+    //         waitingSize = (100 - uploadingfile.percent) / 100 * uploadingfile.size + waitingSize
+    //         totalSize = uploadingfile.size + totalSize
+    //       }
+    //     })
+    //     let totalPercent = Math.round((totalSize - waitingSize) / totalSize * 100)
+    //     setUploadProgress(totalPercent)
+    //   }
+    // }
 
-  }, [uploadingFiles])
+  // }, [uploadingFiles])
 
 
   //upload file to onedrive
   const handleUploadFiles = (files: Array<File>) => {
    
-    let uploading = [...uploadingFiles]
+    let uploading = new Array<UploadingFile>
     files.map((file: File, index: number) => {
       let isSameFileExisted = uploadingFiles.some((uploadingfile) => {
         if (uploadingfile.name === file.name) {
@@ -100,7 +100,6 @@ const OptionGroup = ({
         })
       }
     })
-    setUploadingFiles(uploading)
     setSlideOpen(true)
     files.map(async (file: File) => {
       restrictedUpload(
@@ -111,7 +110,9 @@ const OptionGroup = ({
         uploading,
         setUploadingFiles,
         folderChildren,
-        setFolderChildren).then((data) => {
+        setFolderChildren,
+        setUploadProgress
+        ).then((data) => {
 
           console.log('upload success')
         }).catch((err) => {
