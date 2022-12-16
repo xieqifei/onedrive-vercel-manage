@@ -301,7 +301,7 @@ export const uploadFile = async (
   setUploadingFilesConst = setUploadingFiles
 
   let uploadUrl = await getUploadSession(file.name, parentPath, odpt)
-  uploadingFilesConst.concat(uploadingFilesTemp)
+  uploadingFilesConst.push(...uploadingFilesTemp)
   console.log(uploadingFilesConst)
   //store session url in uploadingFiles
   uploadingFilesConst.map((f, index) => {

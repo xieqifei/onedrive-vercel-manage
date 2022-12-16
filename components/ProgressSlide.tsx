@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, SetStateAction } from 'react'
+import { Dispatch,  SetStateAction } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
 import { Progress, Result, Drawer, List, Avatar, Button } from 'antd';
 import { useTranslation } from 'next-i18next';
@@ -47,7 +47,7 @@ export default function ProgressSlide(
   return (
 
     <Drawer title={t("Upload Progress")} width='60%' placement="right" onClose={onClose} open={slideOpen} >
-      <div className={uploadingFiles.length === 0 ? 'hidden ' : ''}>
+      <div className={uploadingFiles.every(f=>f.status==='done'||f.status==='removed') ? 'hidden ' : ''}>
         <div>
           <span> {
             t('Uploading: {{number}} file(s)', { number: uploadingFiles.length })
@@ -84,7 +84,7 @@ export default function ProgressSlide(
         />
 
       </div>
-      <div className={uploadingFiles.length > 0 ? 'hidden' : 'inline'}>
+      <div className={!uploadingFiles.every(f=>f.status==='done'||f.status==='removed') ? 'hidden' : 'inline'}>
         <Result
           status="success"
           title={t('Successfully Upload All Files!')}
