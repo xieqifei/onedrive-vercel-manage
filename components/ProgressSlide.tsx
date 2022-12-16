@@ -1,5 +1,5 @@
 import { Dispatch, Fragment, SetStateAction } from 'react'
-import { UploadingFile } from '../types'
+import { OdFolderChildren, UploadingFile } from '../types'
 import { Progress, Result, Drawer, List, Avatar, Button } from 'antd';
 import { useTranslation } from 'next-i18next';
 import { RedoOutlined, PauseOutlined, DeleteOutlined, PlayCircleOutlined } from '@ant-design/icons';
@@ -10,12 +10,16 @@ export default function ProgressSlide(
   {
     uploadingFiles,
     setUploadingFiles,
+    folderChildren,
+    setFolderChildren,
     slideOpen,
     setSlideOpen,
     uploadProgress
   }: {
     uploadingFiles: Array<UploadingFile>
     setUploadingFiles: Dispatch<SetStateAction<Array<UploadingFile>>>
+    folderChildren: Array<OdFolderChildren>
+    setFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>
     slideOpen: boolean
     setSlideOpen: Dispatch<SetStateAction<boolean>>
     uploadProgress: number
@@ -37,7 +41,8 @@ export default function ProgressSlide(
     let uploadingFilesTemp = [...uploadingFiles]
     uploadingFilesTemp.map((f, index) => {
       if (f.name === item.name) {
-        uploadingFilesTemp.splice(index, 1)
+        // uploadingFilesTemp.splice(index, 1)
+        uploadingFilesTemp[index].status = 'removed'
         axios.delete(f.session)
       }
     })
@@ -45,7 +50,7 @@ export default function ProgressSlide(
   }
 
   const reupload = (item: UploadingFile) => {
-    reuploadFile(item, uploadingFiles, setUploadingFiles)
+    reuploadFile(item, uploadingFiles, setUploadingFiles,folderChildren,setFolderChildren)
   }
 
   const onClose = () => {
@@ -68,7 +73,7 @@ export default function ProgressSlide(
         <List
           size='small'
           itemLayout="horizontal"
-          dataSource={uploadingFiles}
+          dataSource={uploadingFiles.filter((f)=>f.status!=='removed'&&f.status!=='done')}
           renderItem={(item) => (
             <List.Item style={{ padding: 0 }}>
               <div className='w-full '>

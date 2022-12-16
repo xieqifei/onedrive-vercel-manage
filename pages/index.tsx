@@ -37,6 +37,8 @@ export default function Home() {
   const progressSlideProps = {
     uploadingFiles,
     setUploadingFiles,
+    folderChildren,
+    setFolderChildren,
     slideOpen,
     setSlideOpen,
     uploadProgress
