@@ -127,6 +127,12 @@
   "Failed":"失敗",
   "Create":"創建",
   "Please input a folder name above!":"請在上方輸入文件夾名字！",
-  "Please input folder name here!":"在這裡輸入文件夾名字！"
+  "Please input folder name here!":"在這裡輸入文件夾名字！",
+  
+  "{{failedItemCount}} item(s) failed.":"{{failedItemCount}}個項目刪除失敗！",
+  "{{successItemCount}} item(s) deleted.":"{{successItemCount}}個項目被刪除！",
+  "Request failed. check:":"請求失敗，錯誤信息:",
+  "Are you sure to delete them all?":"你確定要刪除這些文件嗎？",
+  "Delete":"刪除"
 
 }

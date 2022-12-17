@@ -18,7 +18,7 @@ export default function Home() {
 
   const [uploadingFiles, setUploadingFiles] = useState<Array<UploadingFile>>(new Array<UploadingFile>)
   const [slideOpen, setSlideOpen] = useState(false)
-  const [isFolderPage, setIsFolderPage] = useState(true)
+  const [isFolderPage, setIsFolderPage] = useState(false)
   const [folderChildren, setFolderChildren] = useState(new Array<OdFolderChildren>)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
   const [uploadProgress,setUploadProgress] = useState<number>(0)

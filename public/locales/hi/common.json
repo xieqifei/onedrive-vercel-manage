@@ -129,6 +129,11 @@
    "Failed": "असफल",
    "Create": "बनाएँ",
    "Please input a folder name above!": "कृपया ऊपर एक फ़ोल्डर नाम दर्ज करें!",
-   "Please input folder name here!": "यहाँ फ़ोल्डर का नाम दर्ज करें!"
+   "Please input folder name here!": "यहाँ फ़ोल्डर का नाम दर्ज करें!",
 
+   "{{failedItemCount}} item(s) failed.": "{{failedItemCount}} आइटम हटाए जाने में विफल!",
+   "{{successItemCount}} item(s) deleted.": "{{successItemCount}} आइटम हटाए गए!",
+   "Request failed. check:": "अनुरोध विफल, त्रुटि संदेश:",
+   "Are you sure to delete them all?": "क्या आप निश्चित रूप से इन फ़ाइलों को हटाना चाहते हैं?",
+   "Delete": "हटाएं"
 }

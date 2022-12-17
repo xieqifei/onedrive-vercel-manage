@@ -186,7 +186,7 @@ export const reuploadFile = async (
 
   const file = pausedFiles.find(f => f.name === readyFile.name)
   if (!file) {
-    alert('File not found. Plesea remove this session, and upload again')
+    console.error('file not found.')
     setStatus('error')
     return
   }

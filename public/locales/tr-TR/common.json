@@ -132,7 +132,12 @@
    "Failed": "Başarısız",
    "Create": "Oluştur",
    "Please input a folder name above!": "Lütfen yukarıya bir klasör adı girin!",
-   "Please input folder name here!": "Klasör adını buraya girin!"
+   "Please input folder name here!": "Klasör adını buraya girin!",
 
+   "{{failedItemCount}} item(s) failed.": "{{failedItemCount}} öğe silinemedi!",
+   "{{successItemCount}} item(s) deleted.": "{{successItemCount}} öğe silindi!",
+   "Request failed. check:":"İstek başarısız oldu, hata mesajı:",
+   "Are you sure to delete them all?": "Bu dosyaları silmek istediğinizden emin misiniz?",
+   "Delete": "Sil"
 
 }

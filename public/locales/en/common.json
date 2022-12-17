@@ -133,7 +133,14 @@
   "Failed":"Failed",
   "Create":"Create",
   "Please input a folder name above!":"Please input a folder name above!",
-  "Please input folder name here!":"Please input folder name here!"
+  "Please input folder name here!":"Please input folder name here!",
+
+  "{{failedItemCount}} item(s) failed.":"{{failedItemCount}} item(s) failed.",
+  "{{successItemCount}} item(s) deleted.":"{{successItemCount}} item(s) deleted.",
+  "Request failed. check:":"Request failed. check:",
+  "Are you sure to delete them all?":"Are you sure to delete them all?",
+  "Delete":"Delete"
+
 
 
 }

@@ -32,14 +32,14 @@ const DeleteBtn = ({
   const delCountMsg = (failedItemCount: number, successItemCount: number) => {
     messageApi.open({
       type: failedItemCount === 0 ? 'success' : successItemCount === 0 ? 'error' : 'warning',
-      content: (failedItemCount === 0 ? '' : `${failedItemCount} item(s) failed. `) + (successItemCount === 0 ? '' : `${successItemCount} item(s) deleted.`),
+      content: (failedItemCount === 0 ? '' : t('{{failedItemCount}} item(s) failed.',{failedItemCount})) + (successItemCount === 0 ? '' : t('{{successItemCount}} item(s) deleted.',{successItemCount})),
     });
   };
 
   const delFailedMsg = (msg) => {
     messageApi.open({
       type: 'error',
-      content: 'Request failed. check:' + msg
+      content: t('Request failed. check:') + msg
     })
   }
 
@@ -59,7 +59,7 @@ const DeleteBtn = ({
       odpt: hashedToken
     }
     axios.post('/api/delete', data).then((rep) => {
-      setLoading(false)
+      
       //get rep data,that is a list of {status:"ok"or"failed",itemid:"","msg"}
       const itemReps = rep.data
       //are all items deleted successfully?
@@ -86,11 +86,11 @@ const DeleteBtn = ({
         })
       })
       setFolderChildren(folderAfterDel)
-      setIsPopconfirmShow(false)
     }).catch((rep) => {
-      setLoading(false)
       delFailedMsg(rep.data)
+    }).finally(()=>{
       setIsPopconfirmShow(false)
+      setLoading(false)
     })
   }
   return (
@@ -102,11 +102,13 @@ const DeleteBtn = ({
         onConfirm={() => deleteItem()}
         okButtonProps={{ loading,danger:true,type:'default'}}
         onCancel={handleCancel}
+        cancelText={t("Cancel")}
+        okText={t("Delete")}
       >
         <Button
           icon={<DeleteOutlined style={{ display: 'inline-flex' }} />}
           onClick={() => { setIsPopconfirmShow(true) }}
-          className={isBtnShow ? 'mr-2 content-center' : 'hidden'}
+          className={isBtnShow&&folderChildren.length!==0 ? 'mr-2 content-center' : 'hidden'}
           danger
           size='small'
         >
