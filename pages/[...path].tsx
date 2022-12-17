@@ -30,10 +30,8 @@ export default function Folders() {
     isFolderPage,
     folderChildren,
     setFolderChildren,
-    uploadingFiles,
     setUploadingFiles,
     setSlideOpen,
-    uploadProgress,
     setUploadProgress
   }
   const progressSlideProps = {

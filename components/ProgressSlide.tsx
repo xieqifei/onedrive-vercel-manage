@@ -28,15 +28,15 @@ export default function ProgressSlide(
   const { t } = useTranslation()
 
   const pauseUploadHandle = (item: UploadingFile) => {
-    pauseUpload(item,setUploadingFiles)
+    pauseUpload(item)
   }
 
   const removeUploadHandle = (item: UploadingFile) => {
-    removeUpload(item,setUploadingFiles)
+    removeUpload(item)
   }
 
   const reupload = (item: UploadingFile) => {
-    reuploadFile(item, setUploadingFiles,folderChildren,setFolderChildren)
+    reuploadFile(item)
   }
 
   const onClose = () => {
@@ -50,7 +50,7 @@ export default function ProgressSlide(
       <div className={uploadingFiles.every(f=>f.status==='done'||f.status==='removed') ? 'hidden ' : ''}>
         <div>
           <span> {
-            t('Uploading: {{number}} file(s)', { number: uploadingFiles.length })
+            t('Uploading: {{number}} file(s)', { number: uploadingFiles.filter(f=>f.status=='uploading').length })
           } </span>
           <Progress percent={uploadProgress} size="small" />
         </div>
@@ -62,7 +62,7 @@ export default function ProgressSlide(
           dataSource={uploadingFiles.filter((f)=>f.status!=='removed'&&f.status!=='done')}
           renderItem={(item) => (
             <List.Item style={{ padding: 0 }}>
-              <div className='w-full '>
+              <div className='w-full inline-flex'>
                 <div className='w-4/5'>
                   <h4 className="truncate font-bold">{item.name}</h4>
                   <div className="inline-flex">
@@ -71,8 +71,7 @@ export default function ProgressSlide(
                     <div className={item.status === 'error' ? 'text-red-500' : 'hidden'}>Error</div>
                   </div>
                 </div>
-                <div className='mr-0'>
-
+                <div className='mr-0 inline-flex'>
                   <Button onClick={() => { reupload(item) }} className={item.status !== 'uploading' ? '' : 'hidden'} shape="circle" size='small' icon={item.status === 'error' ? <RedoOutlined /> : <PlayCircleOutlined />} type="text"></Button>
                   <Button onClick={() => { pauseUploadHandle(item) }} className={item.status === 'uploading' ? '' : 'hidden'} shape="circle" size='small' icon={<PauseOutlined />} type="text"></Button>
                   <Button onClick={() => { removeUploadHandle(item) }} shape="circle" size='small' icon={<DeleteOutlined />} type="text" danger></Button>
@@ -84,7 +83,7 @@ export default function ProgressSlide(
         />
 
       </div>
-      <div className={!uploadingFiles.every(f=>f.status==='done'||f.status==='removed') ? 'hidden' : 'inline'}>
+      <div className={!uploadingFiles.every(f=>f.status==='done'||f.status==='removed')||uploadingFiles.length===0? 'hidden' : 'inline'}>
         <Result
           status="success"
           title={t('Successfully Upload All Files!')}

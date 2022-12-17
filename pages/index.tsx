@@ -27,10 +27,8 @@ export default function Home() {
     isFolderPage,
     folderChildren,
     setFolderChildren,
-    uploadingFiles,
     setUploadingFiles,
     setSlideOpen,
-    uploadProgress,
     setUploadProgress
   }
 
