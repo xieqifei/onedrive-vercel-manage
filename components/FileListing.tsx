@@ -170,7 +170,6 @@ const FileListing: FC<{
     const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
 
     const { t } = useTranslation()
-
     const path = queryToPath(query)
 
     const { data, error, size, setSize } = useProtectedSWRInfinite(path)
