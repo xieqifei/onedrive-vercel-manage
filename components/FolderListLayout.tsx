@@ -93,7 +93,7 @@ const FolderListLayout = ({
         </div>
       </div>
 
-      {folderChildren.map((c: OdFolderChildren) => (
+      {folderChildren.filter((c: OdFolderChildren)=>c.name!=='.password').map((c: OdFolderChildren) => (
         <div
           className="grid grid-cols-12 transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850 flex"
           key={c.id}

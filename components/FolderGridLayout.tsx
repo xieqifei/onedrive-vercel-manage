@@ -102,7 +102,7 @@ const FolderGridLayout = ({
       </div>
 
       <div className="grid grid-cols-2 gap-3 p-3 md:grid-cols-4">
-        {folderChildren.map((c: OdFolderChildren) => (
+        {folderChildren.filter((c: OdFolderChildren)=>c.name!=='.password').map((c: OdFolderChildren) => (
           <div
             key={c.id}
             className="group relative overflow-hidden rounded transition-all duration-100 hover:bg-gray-100 dark:hover:bg-gray-850"
