@@ -13,6 +13,7 @@ import OptionGroup from '../components/OptionGroup'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 import DeleteBtn from '../components/DeleteBtn'
+import { clearPageAsyncChanged, isPageAsyncChanged } from '../utils/asyncChangedPage'
 
 export default function Home() {
 
@@ -62,6 +63,20 @@ export default function Home() {
     selected
   }
 
+    //if page has some update after loaded, for example, upload,create new folder or delete.
+  //when you click forward and back button on the browser, this page must be reload to prevent
+  //from showing old page because of "bfcache" policy.
+  useEffect(()=>{
+    window.addEventListener('popstate',(e)=>{
+      if(isPageAsyncChanged()){
+        clearPageAsyncChanged()
+        window.location.reload()
+        
+       
+      }
+    })
+  },[])
+  
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">

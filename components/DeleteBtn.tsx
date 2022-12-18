@@ -6,6 +6,7 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { getStoredToken } from "../utils/protectedRouteHandler";
 import axios from "axios";
+import { clearPageAsyncChanged, setPageAsyncChanged } from "../utils/asyncChangedPage";
 
 
 const DeleteBtn = ({
@@ -59,7 +60,7 @@ const DeleteBtn = ({
       odpt: hashedToken
     }
     axios.post('/api/delete', data).then((rep) => {
-      
+      setPageAsyncChanged()
       //get rep data,that is a list of {status:"ok"or"failed",itemid:"","msg"}
       const itemReps = rep.data
       //are all items deleted successfully?

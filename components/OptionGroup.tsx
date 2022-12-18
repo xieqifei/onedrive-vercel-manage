@@ -12,6 +12,7 @@ import { DownOutlined, UploadOutlined, FolderAddOutlined, FolderOpenOutlined, Pl
 import { useTranslation } from 'next-i18next'
 import CreateFolderModal from './CreateFolderModal'
 import { FloatButton } from 'antd';
+import { clearPageAsyncChanged, setPageAsyncChanged } from '../utils/asyncChangedPage'
 
 
 
@@ -44,6 +45,7 @@ const OptionGroup = ({
   const handleFileEvent = (e: { target: { files: any } }) => {
     const chosenFiles = Array.prototype.slice.call(e.target.files)
     setSlideOpen(true)
+    setPageAsyncChanged()
     handleUploadFiles(
       chosenFiles,
       asPath,

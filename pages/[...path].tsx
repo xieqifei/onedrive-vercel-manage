@@ -8,11 +8,12 @@ import Footer from '../components/Footer'
 import Breadcrumb from '../components/Breadcrumb'
 import SwitchLayout from '../components/SwitchLayout'
 import OptionGroup from '../components/OptionGroup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { OdFolderChildren, UploadingFile } from '../types'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 import DeleteBtn from '../components/DeleteBtn'
+import { clearPageAsyncChanged, isPageAsyncChanged } from '../utils/asyncChangedPage'
 
 
 export default function Folders() {
@@ -65,6 +66,16 @@ export default function Folders() {
     setFolderChildren,
     selected
   }
+
+  useEffect(()=>{
+    window.addEventListener('popstate',(e)=>{
+      if(isPageAsyncChanged()){
+        clearPageAsyncChanged()
+        window.location.reload()
+      }
+    })
+  },[])
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
       <Head>o

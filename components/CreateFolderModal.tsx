@@ -5,6 +5,7 @@ import { getStoredToken } from '../utils/protectedRouteHandler';
 import {createAFolder} from '../utils/createAFolder'
 import { OdFolderChildren } from '../types';
 import { useTranslation } from 'next-i18next';
+import { clearPageAsyncChanged, setPageAsyncChanged } from '../utils/asyncChangedPage';
 
 
 const CreateFolderModal: React.FC<{
@@ -30,6 +31,7 @@ const CreateFolderModal: React.FC<{
             return 
         }
         createAFolder(folderName.current,asPath,hashedToken).then((folderItem)=>{
+            setPageAsyncChanged()
             //update UI with new folder 
             let folders = [...folderChildren]
             folders.unshift(folderItem as OdFolderChildren)
