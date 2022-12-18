@@ -13,7 +13,8 @@ import { OdFolderChildren, UploadingFile } from '../types'
 import ProgressBtn from '../components/ProgressBtn'
 import ProgressSlide from '../components/ProgressSlide'
 import DeleteBtn from '../components/DeleteBtn'
-import { clearPageAsyncChanged, isPageAsyncChanged } from '../utils/asyncChangedPage'
+import SelectedDownloadBtn from '../components/SelectedDownloadBtn'
+import { clearConstContainer } from '../utils/uploadFile'
 
 
 export default function Folders() {
@@ -24,9 +25,12 @@ export default function Folders() {
   const [isFolderPage, setIsFolderPage] = useState(true)
   const [folderChildren, setFolderChildren] = useState<Array<OdFolderChildren>>(new Array<OdFolderChildren>)
   const [selected, setSelected] = useState<{ [key: string]: boolean }>({})
-  const [uploadProgress,setUploadProgress] = useState<number>(0)
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
 
-
+  useEffect(()=>{
+    clearConstContainer()
+   },[])
+   
   const optionGroupProps = {
     isFolderPage,
     folderChildren,
@@ -66,15 +70,12 @@ export default function Folders() {
     setFolderChildren,
     selected
   }
+  const SelectedDownloadBtnProps = {
+    folderChildren,
+    selected
+  }
 
-  useEffect(()=>{
-    window.addEventListener('popstate',(e)=>{
-      if(isPageAsyncChanged()){
-        clearPageAsyncChanged()
-        window.location.reload()
-      }
-    })
-  },[])
+
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
@@ -90,11 +91,13 @@ export default function Folders() {
           <nav className="mb-4 flex items-center justify-between space-x-3 pl-1">
             <Breadcrumb query={query} />
             <div className='flex'>
-              <DeleteBtn {...delBtnProps}/>
-              
+              <SelectedDownloadBtn {...SelectedDownloadBtnProps} />
+
+              <DeleteBtn {...delBtnProps} />
+
               <ProgressBtn {...progressBtnProps} />
 
-              <SwitchLayout isFolderPage/>
+              <SwitchLayout isFolderPage />
             </div>
           </nav>
           <FileListing {...fileListProps} />

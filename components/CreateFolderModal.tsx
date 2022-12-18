@@ -5,7 +5,7 @@ import { getStoredToken } from '../utils/protectedRouteHandler';
 import {createAFolder} from '../utils/createAFolder'
 import { OdFolderChildren } from '../types';
 import { useTranslation } from 'next-i18next';
-import { clearPageAsyncChanged, setPageAsyncChanged } from '../utils/asyncChangedPage';
+import { setPageAsyncChanged } from '../utils/asyncChangedPage';
 
 
 const CreateFolderModal: React.FC<{

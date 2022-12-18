@@ -7,9 +7,13 @@ import LimitPromise from "./LimitPromise";
 const uploadingFilesConst = new Array<UploadingFile>
 let setUploadProgressConst: Dispatch<SetStateAction<number>>
 let setUploadingFilesConst: Dispatch<SetStateAction<Array<UploadingFile>>>
-let folderChildrenConst = new Array<OdFolderChildren>
+const folderChildrenConst = new Array<OdFolderChildren>
 let setFolderChildrenConst: Dispatch<SetStateAction<Array<OdFolderChildren>>>
 
+export const clearConstContainer = ()=>{
+  uploadingFilesConst.splice(0,uploadingFilesConst.length)
+  folderChildrenConst.splice(0,folderChildrenConst.length)
+}
 //limit the maximal number of uploading files to 6
 const limtReq = new LimitPromise(6);
 

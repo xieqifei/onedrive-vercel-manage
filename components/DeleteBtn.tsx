@@ -6,7 +6,7 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { getStoredToken } from "../utils/protectedRouteHandler";
 import axios from "axios";
-import { clearPageAsyncChanged, setPageAsyncChanged } from "../utils/asyncChangedPage";
+import { setPageAsyncChanged } from "../utils/asyncChangedPage";
 
 
 const DeleteBtn = ({

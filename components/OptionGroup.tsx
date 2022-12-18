@@ -7,12 +7,12 @@ import { useRouter } from 'next/router'
 import { getStoredToken } from '../utils/protectedRouteHandler'
 import { handleUploadFiles } from '../utils/uploadFile'
 
-import { DownOutlined, UploadOutlined, FolderAddOutlined, FolderOpenOutlined, PlusOutlined } from '@ant-design/icons';
+import { UploadOutlined, FolderAddOutlined,PlusOutlined } from '@ant-design/icons';
 
 import { useTranslation } from 'next-i18next'
 import CreateFolderModal from './CreateFolderModal'
 import { FloatButton } from 'antd';
-import { clearPageAsyncChanged, setPageAsyncChanged } from '../utils/asyncChangedPage'
+import { setPageAsyncChanged } from '../utils/asyncChangedPage'
 
 
 

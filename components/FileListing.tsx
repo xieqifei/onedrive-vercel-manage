@@ -162,11 +162,9 @@ const FileListing: FC<{
   setSelected
    }) => {
     const [totalSelected, setTotalSelected] = useState<0 | 1 | 2>(0)
-    const [totalGenerating, setTotalGenerating] = useState<boolean>(false)
     const [folderGenerating, setFolderGenerating] = useState<{ [key: string]: boolean }>({})
 
     const router = useRouter()
-    const hashedToken = getStoredToken(router.asPath)
     const [layout, _] = useLocalStorage('preferredLayout', layouts[0])
 
     const { t } = useTranslation()
@@ -259,41 +257,7 @@ const FileListing: FC<{
         }
       }
 
-      // Selected file download
-      const handleSelectedDownload = () => {
-        const folderName = path.substring(path.lastIndexOf('/') + 1)
-        const folder = folderName ? decodeURIComponent(folderName) : undefined
-        const files = getFiles()
-          .filter(c => selected[c.id])
-          .map(c => ({
-            name: c.name,
-            url: `/api/raw/?path=${path}/${encodeURIComponent(c.name)}${hashedToken ? `&odpt=${hashedToken}` : ''}`,
-          }))
-
-        if (files.length == 1) {
-          const el = document.createElement('a')
-          el.style.display = 'none'
-          document.body.appendChild(el)
-          el.href = files[0].url
-          el.click()
-          el.remove()
-        } else if (files.length > 1) {
-          setTotalGenerating(true)
-
-          const toastId = toast.loading(<DownloadingToast router={router} />)
-          downloadMultipleFiles({ toastId, router, files, folder })
-            .then(() => {
-              setTotalGenerating(false)
-              toast.success(t('Finished downloading selected files.'), {
-                id: toastId,
-              })
-            })
-            .catch(() => {
-              setTotalGenerating(false)
-              toast.error(t('Failed to download selected files.'), { id: toastId })
-            })
-        }
-      }
+     
 
       // Folder recursive download
       const handleFolderDownload = (path: string, id: string, name?: string) => () => {
@@ -348,8 +312,6 @@ const FileListing: FC<{
         toggleItemSelected,
         totalSelected,
         toggleTotalSelected,
-        totalGenerating,
-        handleSelectedDownload,
         folderGenerating,
         handleFolderDownload,
       }
