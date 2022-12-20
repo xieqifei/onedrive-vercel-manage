@@ -53,7 +53,7 @@ module.exports = {
   links: [
     {
       name: 'GitHub',
-      link: 'https://github.com/xieqifei/onedrive-vercel-share',
+      link: 'https://github.com/xieqifei/onedrive-vercel-manage',
     },
   ],
 
