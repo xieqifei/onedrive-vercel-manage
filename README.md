@@ -1,18 +1,40 @@
 # Onedrive-vercel-share
 
-## Get Started
+## !importent
 
-Inspired by [onedrive-vercel-index](https://github.com/spencerwooo/onedrive-vercel-index).
+Due to the unknown risks from the requirement of read-write access to onedrive API, I strongly suggest that you DO NOT use this project for the onedrive where important files are stored. Any potential bugs could be used and cause devastating loss.
 
-To know how to deploy this repos, you need to know onedrive-vercel-index firstly. [Get Start](https://ovi.swo.moe/zh/docs/getting-started).
+For safty, the in `config/site.config.js` defined baseDirectory are defaultly by password protected. So, the first thing to access it, you need to create a new file named ".password", and type a password into it, OR change `protectedRoutes: ['/']`, in `site.config.js` to `protectedRoutes: []`. That will make your storage out of protection.
 
-Specially, **DO NOT** run it using defaut command. 
+## 1. Features
+
+- Muti-files upload
+
+![1671551482036](image/README/1671551482036.png)
+
+- New folder ceation
+
+![1671551391526](image/README/1671551391526.png)
+
+- Delete
+
+![1671551433504](image/README/1671551433504.png)
+
+## 2. Get Started
+
+This project is inspired from [onedrive-vercel-index](https://github.com/spencerwooo/onedrive-vercel-index), so there you can find detailed docs for deployment.
+
+Click here to see [Get Started](https://ovi.swo.moe/zh/docs/getting-started). 
+
+❗❗❗Besides, **DO NOT** run it using defaut command, otherwise deployment can be failed
 
 Use `npm install --legacy-peer-deps` instead of `npm i` or `npm install`
 
 Use `npm build` to run it at vercel
 
-## Dev
+You can turn to redis.io to get free Redis database.
+
+## 3. Dev
 
 Use `npm run dev` run it on local server
 
