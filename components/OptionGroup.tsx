@@ -11,7 +11,7 @@ import { UploadOutlined, FolderAddOutlined,PlusOutlined } from '@ant-design/icon
 
 import { useTranslation } from 'next-i18next'
 import CreateFolderModal from './CreateFolderModal'
-import { FloatButton } from 'antd';
+import { FloatButton, message } from 'antd';
 import { setPageAsyncChanged } from '../utils/asyncChangedPage'
 
 
@@ -35,7 +35,8 @@ const OptionGroup = ({
   const { asPath } = useRouter()
   const uploadInput = useRef<HTMLInputElement>(null)
   const hashedToken = getStoredToken(asPath)
-  
+  const [messageApi, contextHolder] = message.useMessage();
+
 
   const { t } = useTranslation()
 
@@ -53,7 +54,8 @@ const OptionGroup = ({
       setUploadingFiles,
       folderChildren,
       setFolderChildren,
-      setUploadProgress);
+      setUploadProgress,
+      messageApi);
   }
 
   const createFolderModalProps = {
@@ -65,7 +67,8 @@ const OptionGroup = ({
 
 
   return (
-    <>
+    <>\
+    {contextHolder}
       <input type="file" ref={uploadInput} multiple className="hidden" onChange={handleFileEvent} />
       <CreateFolderModal {...createFolderModalProps} />
       <FloatButton.Group icon={<PlusOutlined className='inline-flex' />} type="primary" trigger="click" className={isFolderPage ? "inline-block float-right mr-4" : "hidden "}>

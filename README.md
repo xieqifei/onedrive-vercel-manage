@@ -1,5 +1,7 @@
 # Onedrive-vercel-manage
 
+[[English](README.md)|[中文](README_CN.md)]
+
 ## !importent
 
 Due to the unknown risks from the requirement of read-write access to onedrive API, I strongly suggest that you DO NOT use this project for the onedrive where important files are stored. Any potential bugs could be used and cause devastating loss.
@@ -8,7 +10,9 @@ For safty, the in `config/site.config.js` defined baseDirectory are defaultly by
 
 ## 1. Features
 
-- Muti-files upload
+- Breakpoint and big files upload
+
+Known issue is that failure occurs when uploading using the onedrive account for developer. But it works for personal onedrive account.
 
 ![1671551482036](image/README/1671551482036.png)
 

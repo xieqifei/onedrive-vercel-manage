@@ -1,3 +1,4 @@
+import { MessageInstance } from "antd/es/message/interface";
 import axios from "axios";
 import { Dispatch, SetStateAction } from "react";
 import { OdFolderChildren, UploadingFile } from "../types";
@@ -29,7 +30,7 @@ const getUploadSession = async (filename: string, parentPath: string, odpt: stri
 
     return uploadUrl
   } else {
-    console.warn(res.data)
+    console.log(res.data)
     return null
   }
 }
@@ -225,6 +226,7 @@ export const reuploadFile = async (
           let reqConfig = {
             headers: {
               // 'Content-Length': file.size,
+            
               'Content-Range': `bytes ${chunk['start']}-${chunk['end']}/${file.size}`
             }
           }
@@ -295,6 +297,7 @@ export const uploadFile = async (
     uploadingFilesConst.splice(0, uploadingFilesConst.length)
   }
   let uploadUrl = await getUploadSession(file.name, parentPath, odpt)
+  
   //store session url in uploadingFiles
   uploadingFilesConst.map((f, index) => {
     if (f.name === file.name) {
@@ -417,8 +420,8 @@ export const handleUploadFiles = (
   folderChildren: Array<OdFolderChildren>,
   setFolderChildren: Dispatch<SetStateAction<Array<OdFolderChildren>>>,
   setUploadProgress: Dispatch<SetStateAction<number>>,
+  messageApi: MessageInstance
 ) => {
-
   //store states as local viriables or const
   setUploadProgressConst = setUploadProgress
   setUploadingFilesConst = setUploadingFiles
@@ -480,7 +483,10 @@ export const handleUploadFiles = (
     ).then((data) => {
       console.log('upload success')
     }).catch((err) => {
-      console.log(err)
+        messageApi.open({
+          type: 'error',
+          content: `Upload Failed! Error msg:${err}`,
+        });
     })
   })
 }

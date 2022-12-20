@@ -41,6 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Handle response from OneDrive API
     const requestUrl = `${driveApi}/root${encodePath(cleanPath)}/${filename}:/createUploadSession`
+    // const requestUrl = `${driveApi}/root${encodePath(cleanPath)}:/createUploadSession`
+
     const reqConfig = {
         headers: { 'Authorization': `Bearer ${accessToken}` ,'Content-Type': 'application/json'},
       }
