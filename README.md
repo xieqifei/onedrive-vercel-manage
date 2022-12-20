@@ -26,13 +26,13 @@ This project is inspired from [onedrive-vercel-index](https://github.com/spencer
 
 Click here to see [Get Started](https://ovi.swo.moe/zh/docs/getting-started).
 
-❗❗❗Before deployment, **DO NOT** run it using defaut command, otherwise deployment can be failed. 
+❗❗❗Before deployment, **DO NOT** run it using defaut command, otherwise deployment can be failed.
 
 Use `npm install --legacy-peer-deps` instead of `npm i` or `npm install`
 
-Use `npm build` to run it at vercel
+Use `npm run build` to run it at vercel
 
-![1671554092598](image/README/1671554092598.png)
+![1671554527703](image/README/1671554527703.png)
 
 You can turn to redis.io to get free Redis database.
 
