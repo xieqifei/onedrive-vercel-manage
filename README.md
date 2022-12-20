@@ -34,7 +34,7 @@ Use `npm run build` to run it at vercel
 
 ![1671554527703](image/README/1671554527703.png)
 
-You can turn to redis.io to get free Redis database.
+You can turn to [app.redislabs.com](app.redislabs.com) get free Redis database.
 
 ## 3. Dev
 
