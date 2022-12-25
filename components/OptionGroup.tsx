@@ -67,7 +67,7 @@ const OptionGroup = ({
 
 
   return (
-    <>\
+    <>
     {contextHolder}
       <input type="file" ref={uploadInput} multiple className="hidden" onChange={handleFileEvent} />
       <CreateFolderModal {...createFolderModalProps} />
