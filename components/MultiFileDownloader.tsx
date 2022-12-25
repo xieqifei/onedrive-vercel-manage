@@ -5,6 +5,8 @@ import { useTranslation } from 'next-i18next'
 
 import { fetcher } from '../utils/fetchWithSWR'
 import { getStoredToken } from '../utils/protectedRouteHandler'
+import LimitPromise from '../utils/LimitPromise'
+const limtReq = new LimitPromise(6);
 
 /**
  * A loading toast component with file download progress support
@@ -52,6 +54,15 @@ export function downloadBlob({ blob, name }: { blob: Blob; name: string }) {
   el.remove()
 }
 
+const limitDownload = (
+  url: string) => {
+  return limtReq.call(() => {
+    return fetch(url)
+  }).then((r:any)=>{return r.blob()})
+}
+
+
+
 /**
  * Download multiple files after compressing them into a zip
  * @param toastId Toast ID to be used for toast notification
@@ -76,9 +87,7 @@ export async function downloadMultipleFiles({
   files.forEach(({ name, url }) => {
     dir.file(
       name,
-      fetch(url).then(r => {
-        return r.blob()
-      })
+      limitDownload(url)
     )
   })
 
@@ -145,7 +154,7 @@ export async function downloadTreelikeMultipleFiles({
     } else {
       dir.file(
         name,
-        fetch(url!).then(r => r.blob())
+        limitDownload(url!)
       )
     }
   }
